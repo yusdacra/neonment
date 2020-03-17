@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://client/scripts/hud.gd" type="Script" id=1]
+
+[node name="hud" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+pl_path = NodePath("center/player_row/player_list")
+pr_path = NodePath("center/player_row")
+pn_path = NodePath("center/player_row/player_name")
+
+[node name="center" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="player_row" type="VBoxContainer" parent="center"]
+margin_left = 412.0
+margin_top = 286.0
+margin_right = 612.0
+margin_bottom = 313.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="player_name" type="Label" parent="center/player_row"]
+margin_right = 200.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 200, 0 )
+custom_colors/font_color = Color( 1, 0.996078, 0.996078, 1 )
+custom_colors/font_outline_modulate = Color( 0.0823529, 0.0117647, 0.0117647, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "LocalPlayerName"
+align = 1
+
+[node name="player_list" type="ItemList" parent="center/player_row"]
+margin_top = 18.0
+margin_right = 200.0
+margin_bottom = 27.0
+auto_height = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
