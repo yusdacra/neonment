@@ -2,7 +2,8 @@
 
 [ext_resource path="res://client/assets/materials/black.tres" type="Material" id=1]
 [ext_resource path="res://client/assets/materials/white.tres" type="Material" id=2]
-[ext_resource path="res://common/entities/player/player.gd" type="Script" id=3]
+[ext_resource path="res://common/scripts/player.gd" type="Script" id=3]
+
 
 
 

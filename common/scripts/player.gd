@@ -16,23 +16,11 @@ export var floor_max_angle: float = 45.0
 var velocity := Vector3()
 var current_time: float = 0.0
 var mouse_axis := Vector2()
-var input_data: Dictionary = {
-	forward = false,
-	backward = false,
-	left = false,
-	right = false,
-	jump = false,
-	sprint = false,
-	mouse_axis = Vector2(),
-}
 onready var udelta: float = utils.networking().udelta
 
-func _input(event):
+func _input(event) -> void:
 	if event is InputEventMouseMotion:
 		mouse_axis = event.relative
-
-func apply_input(idata: Dictionary):
-	input_data = idata
 
 func gather_input() -> Dictionary:
 	var idata: Dictionary = {
@@ -43,7 +31,6 @@ func gather_input() -> Dictionary:
 		jump = Input.is_action_pressed("move_jump"),
 		sprint = Input.is_action_pressed("move_sprint"),
 		mouse_axis = mouse_axis,
-		timestamp = 1,
 	}
 	
 	mouse_axis = Vector2()
@@ -61,10 +48,9 @@ func get_state() -> Dictionary:
 		translation = get_translation(),
 		rotation = get_rotation(),
 		head_rotation = get_node("head").get_rotation(),
-		pi_timestamp = 1,
 	}
 
-func process_state():
+func process_state(input_data: Dictionary):
 	# Input
 	var direction = Vector3()
 	var aim: Basis = get_global_transform().basis
@@ -129,13 +115,3 @@ func process_state():
 	var temp_rot: Vector3 = head.rotation_degrees
 	temp_rot.x = clamp(temp_rot.x, -80, 80)
 	head.rotation_degrees = temp_rot
-
-	input_data = {
-		forward = false,
-		backward = false,
-		left = false,
-		right = false,
-		jump = false,
-		sprint = false,
-		mouse_axis = Vector2(),
-	}

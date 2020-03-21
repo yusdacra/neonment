@@ -1,15 +1,13 @@
 extends Spatial
 
 var from_to: Dictionary = {}
-var last_snapshot: Dictionary = {
-	timestamp = -1,
-}
+var last_ss_timestamp: int = -1
 var last_pi_timestamp: int = 0
 var networking: Node
 var current_time: float = 0.0
 var player_node: KinematicBody
+var input_timestamp: int = 0
 var sent_inputs: Dictionary = {}
-var input_timestamp: int = 1
 
 func _ready() -> void:
 	networking = utils.networking()
@@ -18,7 +16,7 @@ func _ready() -> void:
 	networking.connect("player_left", self, "remove_player")
 	networking.connect("received_snapshot", self, "apply_snapshot")
 
-	# Spawn local player (position doesnt matter as it will get updated by the server)
+	# Spawn local player (position doesnt matter as it will be updated by the server)
 	spawn_player(networking.player)
 	player_node = get_node(str(networking.player.id))
 	# Spawn other players
@@ -35,13 +33,21 @@ func _process(delta: float) -> void:
 		return
 	current_time -= networking.udelta
 
-	var idata = player_node.gather_input()
-	idata.timestamp = input_timestamp
-	networking.send_input_data(idata)
+	var idata = {
+		pinput = player_node.gather_input(),
+		timestamp = input_timestamp,
+	}
 	input_timestamp += 1
-	sent_inputs[input_timestamp - 1] = idata
-	player_node.apply_input(idata)
-	player_node.process_state()
+	networking.send_input_data(idata)
+	sent_inputs[idata.timestamp] = idata
+	
+	for itimestamp in sent_inputs:
+		if itimestamp <= last_pi_timestamp:
+			sent_inputs.erase(itimestamp)
+		else:
+			player_node.process_state(sent_inputs[itimestamp].pinput)
+	
+	#print("These are the inputs that aren't processed yet: ", sent_inputs)
 
 func _on_disconnect() -> void:
 	print("Disconnected from server")
@@ -75,14 +81,11 @@ func spawn_player(pinfo: Dictionary, spawn_point: Vector3 = Vector3(0, 5, 0)) ->
 ##### SNAPSHOT CODE #####
 
 func apply_snapshot(ss: Dictionary) -> void:
-	if ss.timestamp <= last_snapshot.timestamp:
+	if ss.timestamp <= last_ss_timestamp:
 		return
-	last_snapshot = ss
-	last_pi_timestamp = ss.player_states[networking.player.id].pi_timestamp
+	last_ss_timestamp = ss.timestamp
+	last_pi_timestamp = ss.player_states[networking.player.id].timestamp
 	
-	_apply_snapshot(ss)
-
-func _apply_snapshot(ss: Dictionary) -> void:
 	for id in ss.player_states:
 		var pnode = get_node(str(id))
 		
@@ -91,12 +94,12 @@ func _apply_snapshot(ss: Dictionary) -> void:
 		
 		if from_to.has(id):
 			from_to[id].from = from_to[id].to
-			from_to[id].to = ss.player_states[id]
+			from_to[id].to = ss.player_states[id].pstate
 			from_to[id].time = 0.0
 		else:
 			from_to[id] = {
-				from = ss.player_states[id],
-				to = ss.player_states[id],
+				from = ss.player_states[id].pstate,
+				to = ss.player_states[id].pstate,
 				time = networking.udelta,
 			}
 		

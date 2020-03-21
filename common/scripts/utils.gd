@@ -1,10 +1,12 @@
 extends Node
 
+const TIMEOUT: float = 10.0
+
 var current_map_name: String = "node_that_will_never_exist_in_the_scene_hierarchy"
 var feature: String
 
 func entity(name: String) -> String:
-	return "res://common/entities/" + name + "/" + name + ".tscn"
+	return "res://common/entities/" + name + ".tscn"
 
 func networking() -> Node:
 	return get_node("/root/root")

@@ -4,14 +4,15 @@ var current_time: float = 0.0
 var ss_timestamp: int = 1
 var networking: Node
 var inputs: Dictionary = {}
+var pi_input_timestamp: Dictionary = {}
 
-func _ready():
+func _ready() -> void:
 	networking = utils.networking()
 	networking.connect("player_joined", self, "spawn_player")
 	networking.connect("player_left", self, "remove_player")
 	networking.connect("input_received", self, "cache_input")
 
-func _process(delta):
+func _process(delta) -> void:
 	current_time += delta
 	if current_time < networking.udelta:
 		return
@@ -19,7 +20,7 @@ func _process(delta):
 	
 	update_state()
 
-func update_state():
+func update_state() -> void:
 	var ss: Dictionary = {
 		player_states = {},
 		timestamp = ss_timestamp,
@@ -27,30 +28,49 @@ func update_state():
 	
 	for id in networking.players:
 		var inode: KinematicBody = get_node(str(id))
-		if inputs.has(id):
-			inode.apply_input(inputs[id])
-		inode.process_state()
-		var state = inode.get_state()
-		if inputs.has(id):
-			state.pi_timestamp = inputs[id].timestamp
+		if inputs[id].empty():
+			inode.process_state(
+				{
+					forward = false,
+					backward = false,
+					left = false,
+					right = false,
+					jump = false,
+					sprint = false,
+					mouse_axis = Vector2(),
+				}
+			)
+		else:
+			for input in inputs[id]:
+				inode.process_state(input.pinput)
+			pi_input_timestamp[id] = inputs[id].back().timestamp
+			
+		var state = {
+			pstate = inode.get_state(),
+			timestamp = pi_input_timestamp[id],
+		}
+		inputs[id].clear()
 		ss.player_states[id] = state
 	
-	inputs.clear()
 	if networking.players.size() > 0:
 		networking.send_snapshot(ss)
 		ss_timestamp += 1
 
-func spawn_player(pinfo: Dictionary):
-	var new_player: KinematicBody = load("res://common/entities/" + pinfo.classname + "/" + pinfo.classname + ".tscn").instance()
+func spawn_player(pinfo: Dictionary) -> void:
+	inputs[pinfo.id] = []
+	pi_input_timestamp[pinfo.id] = 0
+	var new_player: KinematicBody = load(utils.entity(pinfo.classname)).instance()
 	new_player.set_translation(get_node("spawn_points").get_children()[randi() % networking.server_info.max_players].get_translation())
 	new_player.set_name(str(pinfo.id))
 	new_player.get_node("head").get_node("camera").queue_free()
 	add_child(new_player)
 	print_debug("Spawned player ", pinfo.id)
 
-func remove_player(id: int):
+func remove_player(id: int) -> void:
 	get_node(str(id)).queue_free()
+	pi_input_timestamp.erase(id)
+	inputs.erase(id)
 	print_debug("Removed player ", id)
 
-func cache_input(idata: Dictionary, pid: int):
-	inputs[pid] = idata
+func cache_input(idata: Dictionary, id: int) -> void:
+	inputs[id].append(idata)
