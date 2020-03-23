@@ -12,6 +12,7 @@ before_script:
   - mkdir -v -p builds/
 
 linux-server:
+  when: manual
   stage: export
   script:
     - godot -v --export "Linux Server" ./builds/$SV_EXPORT_NAME.x86_64
@@ -21,6 +22,7 @@ linux-server:
       - builds/
 
 linux-client:
+  when: manual
   stage: export
   script:
     - godot -v --export "Linux Client" ./builds/$CL_EXPORT_NAME.x86_64
