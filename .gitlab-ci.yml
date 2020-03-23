@@ -1,0 +1,30 @@
+image: barichello/godot-ci:3.2
+
+stages:
+  - export
+  - deploy
+
+variables:
+  SV_EXPORT_NAME: NeonmentServer
+  CL_EXPORT_NAME: NeonmentClient
+
+before_script:
+  - mkdir -v -p builds/
+
+linux-server:
+  stage: export
+  script:
+    - godot -v --export "Linux Server" ./builds/$SV_EXPORT_NAME.x86_64
+  artifacts:
+    name: $SV_EXPORT_NAME-$CI_JOB_NAME
+    paths:
+      - builds/
+
+linux-client:
+  stage: export
+  script:
+    - godot -v --export "Linux Client" ./builds/$CL_EXPORT_NAME.x86_64
+  artifacts:
+    name: $CL_EXPORT_NAME-$CI_JOB_NAME
+    paths:
+      - builds/
