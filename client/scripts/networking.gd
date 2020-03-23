@@ -48,7 +48,7 @@ func _process(delta: float) -> void:
 	
 	latency_counter += delta
 	if latency_counter >= 1.0:
-		print("Latency: ", averaged_latency / 60)
+		utils.plog("Latency: " + str(averaged_latency / 60))
 		averaged_latency = 0
 		latency_counter = 0.0
 	else:
@@ -61,13 +61,13 @@ func connect_to_server(ip: String, port: int) -> void:
 		
 	match client.create_client(ip, port):
 		ERR_ALREADY_IN_USE:
-			printerr("If you are seeing this error, that means something has gone *very* wrong.")
+			utils.perr("If you are seeing this error, that means something has gone *very* wrong.")
 			return
 		ERR_CANT_CREATE:
-			printerr("Failed to create client.")
+			utils.perr("Failed to create client.")
 			return
 		OK:
-			print("Client created successfully!")
+			utils.plog("Client created successfully!")
 	
 	timeout_counter = 0.0
 	get_tree().set_network_peer(client)

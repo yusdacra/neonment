@@ -64,13 +64,13 @@ func spawn_player(pinfo: Dictionary) -> void:
 	new_player.set_name(str(pinfo.id))
 	new_player.get_node("head").get_node("camera").queue_free()
 	add_child(new_player)
-	print_debug("Spawned player ", pinfo.id)
+	utils.plog("Spawned player " + str(pinfo.id))
 
 func remove_player(id: int) -> void:
 	get_node(str(id)).queue_free()
 	pi_input_timestamp.erase(id)
 	inputs.erase(id)
-	print_debug("Removed player ", id)
+	utils.plog("Removed player " + str(id))
 
 func cache_input(idata: Dictionary, id: int) -> void:
 	inputs[id].append(idata)

@@ -35,21 +35,21 @@ func _process(delta: float) -> void:
 #------------------------#
 
 func client_connected(id) -> void:
-	print("Client ", id, " connected to server")
+	utils.pdbg("Client " + str(id) + " connected to server")
 	rpc_id(id, "receive_server_info", udelta, server_info)
 
 func client_disconnected(id) -> void:
-	print("Client ", id, " disconnected from server")
+	utils.pdbg("Client " + str(id) + " disconnected from server")
 	unregister_player(id)
 
 #---------------------------#
 
 func create_server() -> void:
-	print("Starting server with configuration:")
-	print("Port: ", port)
-	print("Max players: ", server_info.max_players)
-	print("Name: ", server_info.name)
-	print("Update delta: ", udelta)
+	utils.plog("Starting server with configuration:")
+	utils.plog("Port: " + str(port))
+	utils.plog("Max players: " + str(server_info.max_players))
+	utils.plog("Name: " + str(server_info.name))
+	utils.plog("Update delta: " + str(udelta))
 
 	var sv := NetworkedMultiplayerENet.new()
 	# Hardcoded compression mode, must be same with client mode
@@ -57,13 +57,13 @@ func create_server() -> void:
 	
 	match sv.create_server(port, server_info.max_players):
 		ERR_ALREADY_IN_USE:
-			printerr("A server is already running, close it and try again.")
+			utils.perr("A server is already running, close it and try again.")
 			get_tree().quit(ERR_ALREADY_IN_USE)
 		ERR_CANT_CREATE:
-			printerr("Failed to create server.")
+			utils.perr("Failed to create server.")
 			get_tree().quit(ERR_CANT_CREATE)
 		OK:
-			print("Server created successfully!")
+			utils.plog("Server created successfully!")
 	
 	get_tree().set_network_peer(sv)
 
@@ -74,7 +74,7 @@ func unregister_player(id: int) -> void:
 	timeout_counters.erase(id)
 	# Call the clients to remove this player
 	rpc("unregister_player", id)
-	print_debug("Server player list: ", players)
+	utils.pdbg("Server player list: " + str(players))
 
 func send_snapshot(ss: Dictionary) -> void:
 	rpc_unreliable("receive_snapshot", ss)
@@ -93,7 +93,7 @@ remote func register_player(pinfo: Dictionary) -> void:
 	timeout_counters[pinfo.id] = 0.0
 	emit_signal("player_joined", pinfo)
 	rpc_id(pinfo.id, "ready_to_play")
-	print_debug("Server player list: ", players)
+	utils.pdbg("Server player list: " + str(players))
 
 remote func receive_input(idata: Dictionary, pid: int) -> void:
 	emit_signal("input_received", idata, pid)

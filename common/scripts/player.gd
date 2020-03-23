@@ -7,12 +7,15 @@ onready var head: Spatial = get_node(head_path)
 export var gravity: float = 30.0
 export var walk_speed: float = 10.0
 export var sprint_speed: float = 16.0
+export var dash_speed: float = 50.0
 export var acceleration: float = 8.0
 export var deacceleration: float = 10.0
 export(float, 0, 1, 0.05) var air_control: float = 0.3
 export var jump_height: float = 10.0
 export var floor_max_angle: float = 45.0
+export var max_jump: int = 2
 
+var cur_jump: int = 0
 var velocity := Vector3()
 var current_time: float = 0.0
 var mouse_axis := Vector2()
@@ -28,7 +31,7 @@ func gather_input() -> Dictionary:
 		backward = Input.is_action_pressed("move_backward"),
 		left = Input.is_action_pressed("move_left"),
 		right = Input.is_action_pressed("move_right"),
-		jump = Input.is_action_pressed("move_jump"),
+		jump = Input.is_action_just_pressed("move_jump"),
 		sprint = Input.is_action_pressed("move_sprint"),
 		mouse_axis = mouse_axis,
 	}
@@ -68,10 +71,16 @@ func process_state(input_data: Dictionary):
 	# Jump
 	var _snap: Vector3
 	if is_on_floor():
+		cur_jump = 0
 		_snap = Vector3.DOWN
-		if input_data.jump:
+		if input_data.jump && cur_jump < max_jump:
 			_snap = Vector3.ZERO
 			velocity.y = jump_height
+			cur_jump += 1
+	elif input_data.jump && cur_jump < max_jump:
+		_snap = Vector3.ZERO
+		velocity.y = jump_height
+		cur_jump += 1
 	
 	velocity.y -= gravity * udelta
 

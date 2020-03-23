@@ -4,9 +4,6 @@
 [ext_resource path="res://client/assets/materials/white.tres" type="Material" id=2]
 [ext_resource path="res://common/scripts/player.gd" type="Script" id=3]
 
-
-
-
 [sub_resource type="CapsuleMesh" id=1]
 radius = 0.5
 
@@ -33,6 +30,7 @@ walk_speed = 16.0
 sprint_speed = 24.0
 acceleration = 10.0
 deacceleration = 12.0
+jump_height = 15.0
 
 [node name="body" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )

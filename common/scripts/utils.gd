@@ -11,14 +11,27 @@ func entity(name: String) -> String:
 func networking() -> Node:
 	return get_node("/root/root")
 
+func plog(text: String) -> void:
+	print("[INFO] ", "[", time_formatted(), "] -> ", text)
+
+func perr(text: String) -> void:
+	printerr("[ERROR] ", "[", time_formatted(), "] -> ", text)
+
+func pdbg(text: String) -> void:
+	print_debug("[DEBUG] ", "[", time_formatted(), "] -> ", text)
+
+func time_formatted() -> String:
+	var datetime = OS.get_datetime()
+	return str(datetime.hour) + ":" + str(datetime.minute) + ":" + str(datetime.second)
+
 func change_map_to(name: String, is_game_map: bool = true) -> void:
-	print("Map before change: ", current_map_name)
+	plog("Map before change: " + current_map_name)
 	if has_node(current_map_name):
-		print("Removing map", current_map_name)
+		plog("Removing map " + current_map_name)
 		get_node(current_map_name).queue_free()
 	current_map_name = name
 	
-	print("Loading map ", name)
+	plog("Loading map " + name)
 	var map_node: Node
 	if is_game_map:
 		map_node = Spatial.new()

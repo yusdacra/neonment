@@ -50,14 +50,14 @@ func _process(delta: float) -> void:
 	#print("These are the inputs that aren't processed yet: ", sent_inputs)
 
 func _on_disconnect() -> void:
-	print("Disconnected from server")
+	utils.plog("Disconnected from server")
 	utils.change_map_to("main_menu", false)
 
 ##### SPAWN CODE #####
 
 func remove_player(id: int) -> void:
 	get_node(str(id)).queue_free()
-	print_debug("Removed player with id ", id)
+	utils.pdbg("Removed player with id " + str(id))
 
 func spawn_players() -> void:
 	for p in networking.players.values():
