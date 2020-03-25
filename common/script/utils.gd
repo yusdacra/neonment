@@ -1,28 +1,10 @@
 extends Node
 
-const TIMEOUT: float = 10.0
-
 var current_map_name: String = "node_that_will_never_exist_in_the_scene_hierarchy"
 var feature: String
 
 func entity(name: String) -> String:
-	return "res://common/entities/" + name + ".tscn"
-
-func networking() -> Node:
-	return get_node("/root/root")
-
-func plog(text: String) -> void:
-	print("[INFO] ", "[", time_formatted(), "] -> ", text)
-
-func perr(text: String) -> void:
-	printerr("[ERROR] ", "[", time_formatted(), "] -> ", text)
-
-func pdbg(text: String) -> void:
-	print_debug("[DEBUG] ", "[", time_formatted(), "] -> ", text)
-
-func time_formatted() -> String:
-	var datetime = OS.get_datetime()
-	return str(datetime.hour) + ":" + str(datetime.minute) + ":" + str(datetime.second)
+	return "res://common/entity/" + name + ".tscn"
 
 func change_map_to(name: String, is_game_map: bool = true) -> void:
 	plog("Map before change: " + current_map_name)
@@ -35,7 +17,7 @@ func change_map_to(name: String, is_game_map: bool = true) -> void:
 	var map_node: Node
 	if is_game_map:
 		map_node = Spatial.new()
-		map_node.set_script(load("res://" + feature + "/scripts/game_logic.gd"))
+		map_node.set_script(load("res://" + feature + "/script/game_logic.gd"))
 		if feature == "server":
 			map_node.add_child(load("res://server/map_sp/" + name + ".tscn").instance())
 		elif feature == "client":
@@ -47,3 +29,25 @@ func change_map_to(name: String, is_game_map: bool = true) -> void:
 	
 	map_node.set_name(name)
 	call_deferred("add_child", map_node)
+
+#### LOGGING UTILITIES ####
+func plog(text: String) -> void:
+	print("[INFO] ", "[", time_formatted(), "] -> ", text)
+
+func perr(text: String) -> void:
+	printerr("[ERROR] ", "[", time_formatted(), "] -> ", text)
+
+func pdbg(text: String) -> void:
+	print_debug("[DEBUG] ", "[", time_formatted(), "] -> ", text)
+
+func time_formatted() -> String:
+	var datetime = OS.get_datetime()
+	return parse_time(datetime.hour) + ":" + parse_time(datetime.minute) + ":" + parse_time(datetime.second)
+
+func parse_time(time: int) -> String:
+	var t := str(time)
+	if t.length() == 1:
+		t = "0" + t
+	elif t.length() == 0:
+		t = "00"
+	return t

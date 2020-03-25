@@ -1,13 +1,12 @@
 extends Spatial
 
+var ss_timestamp: int = 1 # Last sent snapshot's timestamp
+var inputs: Dictionary = {} # Holds received inputs (that haven't been processed yet)
+var pi_input_timestamp: Dictionary = {} # Caches last processed inputs' timestamp sent by clients, so we can send it back
 var current_time: float = 0.0
-var ss_timestamp: int = 1
-var networking: Node
-var inputs: Dictionary = {}
-var pi_input_timestamp: Dictionary = {}
+onready var networking: Node = get_node("/root/root")
 
 func _ready() -> void:
-	networking = utils.networking()
 	networking.connect("player_joined", self, "spawn_player")
 	networking.connect("player_left", self, "remove_player")
 	networking.connect("input_received", self, "cache_input")
@@ -29,7 +28,7 @@ func update_state() -> void:
 	for id in networking.players:
 		var inode: KinematicBody = get_node(str(id))
 		if inputs[id].empty():
-			inode.process_state(
+			inode.process_input(
 				{
 					forward = false,
 					backward = false,
@@ -38,11 +37,12 @@ func update_state() -> void:
 					jump = false,
 					sprint = false,
 					mouse_axis = Vector2(),
+					ability = [false, false, false, false],
 				}
 			)
 		else:
 			for input in inputs[id]:
-				inode.process_state(input.pinput)
+				inode.process_input(input.pinput)
 			pi_input_timestamp[id] = inputs[id].back().timestamp
 			
 		var state = {
@@ -62,7 +62,6 @@ func spawn_player(pinfo: Dictionary) -> void:
 	var new_player: KinematicBody = load(utils.entity(pinfo.classname)).instance()
 	new_player.set_translation(get_node("spawn_points").get_children()[randi() % networking.server_info.max_players].get_translation())
 	new_player.set_name(str(pinfo.id))
-	new_player.get_node("head").get_node("camera").queue_free()
 	add_child(new_player)
 	utils.plog("Spawned player " + str(pinfo.id))
 

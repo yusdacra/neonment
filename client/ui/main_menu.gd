@@ -1,9 +1,8 @@
 extends Control
 
-var networking: Node
+onready var networking: Node = get_node("/root/root")
 
 func _ready():
-	networking = utils.networking()
 	networking.connect("ready_to_play", self, "start_game")
 	networking.connect("connection_fail", self, "_on_connection_error")
 	
@@ -15,7 +14,7 @@ func _input(event):
 
 func _on_join_pressed():
 	if !update_player_info():
-		printerr("Invalid player information.")
+		utils.perr("Invalid player information.")
 		return
 	
 	var ip: String = get_node("menu/column/row/center/row/join_row/ip").text
@@ -27,7 +26,8 @@ func start_game():
 	utils.change_map_to(networking.server_info.current_map)
 	
 func _on_connection_error():
-	printerr("Connection to server failed.")
+	# TODO: Show a popup when connection fails
+	pass
 
 func update_player_info() -> bool:
 	networking.player.name = get_node("menu/column/row/center/row/player_row/player_name").text

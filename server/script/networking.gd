@@ -2,6 +2,7 @@ extends Node
 
 var players: Dictionary = {}
 
+const timeout: float = 5.0
 var port: int = 5000
 var udelta: float = 1.0 / 60
 var server_info: Dictionary = {
@@ -26,7 +27,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	for id in timeout_counters:
-		if timeout_counters[id] >= utils.TIMEOUT:
+		if timeout_counters[id] >= timeout:
 			client_disconnected(id)
 		if get_tree().has_network_peer():
 			ping_client(id)

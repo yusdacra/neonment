@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://client/assets/materials/black.tres" type="Material" id=1]
-[ext_resource path="res://client/assets/materials/white.tres" type="Material" id=2]
-[ext_resource path="res://common/scripts/player.gd" type="Script" id=3]
+[ext_resource path="res://client/asset/material/white.tres" type="Material" id=1]
+[ext_resource path="res://client/asset/material/black.tres" type="Material" id=2]
+
+
 
 [sub_resource type="CapsuleMesh" id=1]
 radius = 0.5
@@ -20,33 +21,11 @@ surfaces/0 = {
 "vertex_count": 1950
 }
 
-[sub_resource type="CapsuleShape" id=3]
-radius = 0.5
-
-[node name="player" type="KinematicBody"]
-script = ExtResource( 3 )
-head_path = NodePath("head")
-walk_speed = 16.0
-sprint_speed = 24.0
-acceleration = 10.0
-deacceleration = 12.0
-jump_height = 15.0
-
-[node name="body" type="MeshInstance" parent="."]
+[node name="body" type="MeshInstance"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
 mesh = SubResource( 1 )
-material/0 = ExtResource( 1 )
-
-[node name="outline" type="MeshInstance" parent="body"]
-mesh = SubResource( 2 )
 material/0 = ExtResource( 2 )
 
-[node name="head" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0 )
-
-[node name="camera" type="Camera" parent="head"]
-fov = 80.0
-
-[node name="col" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-shape = SubResource( 3 )
+[node name="outline" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+material/0 = ExtResource( 1 )
