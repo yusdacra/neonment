@@ -1,0 +1,135 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://client/ui/multiplayer.gd" type="Script" id=1]
+
+[node name="root" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="menu" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 100
+custom_constants/margin_top = 70
+custom_constants/margin_left = 100
+custom_constants/margin_bottom = 70
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column" type="HBoxContainer" parent="menu"]
+margin_left = 100.0
+margin_top = 70.0
+margin_right = 924.0
+margin_bottom = 530.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="direct" type="VBoxContainer" parent="menu/column"]
+margin_right = 83.0
+margin_bottom = 460.0
+rect_min_size = Vector2( 0, 460 )
+
+[node name="center" type="CenterContainer" parent="menu/column/direct"]
+margin_right = 83.0
+margin_bottom = 460.0
+size_flags_vertical = 3
+
+[node name="row" type="VBoxContainer" parent="menu/column/direct/center"]
+margin_top = 151.0
+margin_right = 83.0
+margin_bottom = 309.0
+
+[node name="player_row" type="VBoxContainer" parent="menu/column/direct/center/row"]
+margin_right = 83.0
+margin_bottom = 42.0
+
+[node name="label" type="Label" parent="menu/column/direct/center/row/player_row"]
+margin_right = 83.0
+margin_bottom = 14.0
+text = "Player name:"
+
+[node name="player_name" type="LineEdit" parent="menu/column/direct/center/row/player_row"]
+margin_top = 18.0
+margin_right = 83.0
+margin_bottom = 42.0
+text = "Player"
+
+[node name="join_row" type="VBoxContainer" parent="menu/column/direct/center/row"]
+margin_top = 46.0
+margin_right = 83.0
+margin_bottom = 158.0
+
+[node name="label" type="Label" parent="menu/column/direct/center/row/join_row"]
+margin_right = 83.0
+margin_bottom = 14.0
+text = "IP:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ip" type="LineEdit" parent="menu/column/direct/center/row/join_row"]
+margin_top = 18.0
+margin_right = 83.0
+margin_bottom = 42.0
+text = "127.0.0.1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label2" type="Label" parent="menu/column/direct/center/row/join_row"]
+margin_top = 46.0
+margin_right = 83.0
+margin_bottom = 60.0
+text = "Port:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="port" type="LineEdit" parent="menu/column/direct/center/row/join_row"]
+margin_top = 64.0
+margin_right = 83.0
+margin_bottom = 88.0
+text = "5000"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="join" type="Button" parent="menu/column/direct/center/row/join_row"]
+margin_top = 92.0
+margin_right = 83.0
+margin_bottom = 112.0
+text = "Join Server"
+
+[node name="server_list" type="VBoxContainer" parent="menu/column"]
+margin_left = 87.0
+margin_right = 87.0
+margin_bottom = 460.0
+
+[node name="center" type="CenterContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -43.0
+margin_top = -40.0
+margin_right = 43.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="back" type="Button" parent="center"]
+margin_top = 10.0
+margin_right = 86.0
+margin_bottom = 30.0
+text = "<-- Go Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="menu/column/direct/center/row/join_row/join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="center/back" to="." method="_on_back_pressed"]

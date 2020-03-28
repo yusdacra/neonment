@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://client/ui/credits.gd" type="Script" id=1]
+
+[node name="root" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="center" type="CenterContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -43.0
+margin_top = -40.0
+margin_right = 43.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="back" type="Button" parent="center"]
+margin_top = 10.0
+margin_right = 86.0
+margin_bottom = 30.0
+text = "<-- Go Back"
+
+[node name="credits" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -28.0
+margin_right = 28.0
+margin_bottom = 31.0
+text = "
+yusdacra"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="center/back" to="." method="_on_back_pressed"]

@@ -2,6 +2,5 @@
 
 [ext_resource path="res://client/script/entrypoint.gd" type="Script" id=1]
 
-
 [node name="root" type="Node"]
 script = ExtResource( 1 )

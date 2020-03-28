@@ -19,12 +19,6 @@ shape = SubResource( 1 )
 
 [node name="movement" type="Node" parent="."]
 script = ExtResource( 2 )
-walk_speed = 25.0
-sprint_speed = 40.0
-acceleration = 25.0
-deacceleration = 25.0
-air_control = 0.5
-jump_height = 13.5
 
 [node name="ability" type="Node" parent="."]
 
