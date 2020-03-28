@@ -29,6 +29,5 @@ func update_player_info() -> bool:
 		return false
 	return true
 
-
 func _on_back_pressed():
 	utils.change_map_to("main_menu", false)

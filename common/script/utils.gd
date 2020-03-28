@@ -51,3 +51,12 @@ func parse_time(time: int) -> String:
 	elif t.length() == 0:
 		t = "00"
 	return t
+
+func read_conf():
+	var file := File.new()
+	file.open("user://" + feature + "_config.json", File.READ)
+	var content: String = file.get_as_text()
+	file.close()
+	if !validate_json(content):
+		return false
+	return parse_json(content)

@@ -2,7 +2,7 @@ extends Node
 
 var players: Dictionary = {}
 
-const timeout: float = 5.0
+var timeout: float = 5.0
 var port: int = 5000
 var udelta: float = 1.0 / 60
 var server_info: Dictionary = {
@@ -22,6 +22,16 @@ signal input_received(idata, id)
 func _ready() -> void:
 	get_tree().connect("network_peer_connected",    self, "client_connected"   )
 	get_tree().connect("network_peer_disconnected", self, "client_disconnected")
+	
+	var config = utils.read_conf()
+	if config is Dictionary:
+		timeout = config.timeout
+		port = config.port
+		udelta = config.update_delta
+		server_info.name = config.name
+		server_info.max_players = config.max_players
+		server_info.current_map = config.map
+	
 	create_server()
 	utils.change_map_to(server_info.current_map)
 
@@ -47,11 +57,12 @@ func client_disconnected(id) -> void:
 
 func create_server() -> void:
 	utils.plog("Starting server with configuration:")
+	utils.plog("Server name: " + str(server_info.name))
+	utils.plog("Map: " + str(server_info.current_map))
 	utils.plog("Port: " + str(port))
-	utils.plog("Max players: " + str(server_info.max_players))
-	utils.plog("Name: " + str(server_info.name))
 	utils.plog("Update delta: " + str(udelta))
-
+	utils.plog("Max players: " + str(server_info.max_players))
+	
 	var sv := NetworkedMultiplayerENet.new()
 	# Hardcoded compression mode, must be same with client mode
 	sv.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_ZSTD)
