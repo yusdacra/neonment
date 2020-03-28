@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 	if !connected_to_server:
 		return
 	
-	if timeout_counter >= utils.TIMEOUT:
+	if timeout_counter >= TIMEOUT:
 		get_tree().set_network_peer(null)
 		on_disconnect()
 	
