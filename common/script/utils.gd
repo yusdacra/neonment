@@ -57,6 +57,6 @@ func read_conf():
 	file.open("user://" + feature + "_config.json", File.READ)
 	var content: String = file.get_as_text()
 	file.close()
-	if !validate_json(content):
+	if validate_json(content):
 		return false
 	return parse_json(content)
