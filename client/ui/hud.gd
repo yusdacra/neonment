@@ -34,4 +34,4 @@ func _on_player_list_changed(_no) -> void:
 	player_list.clear()
 	for p in networking.players.values():
 		player_list.add_item(p.name, null, false)
-		utils.pdbg("Player with name " + p.name + " has been added to the player list node!")
+		state.pdbg("Player with name " + p.name + " has been added to the player list node!")

@@ -4,13 +4,13 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _on_multi_pressed():
-	utils.change_map_to("multiplayer", false)
+	state.change_map_to("multiplayer", false)
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
 
 func _on_credits_pressed() -> void:
-	utils.change_map_to("credits", false)
+	state.change_map_to("credits", false)
 
 func _on_settings_pressed() -> void:
-	utils.change_map_to("settings", false)
+	state.change_map_to("settings", false)

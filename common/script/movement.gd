@@ -16,7 +16,6 @@ export var max_jump: int = 2
 var cur_jump: int = 0
 var velocity := Vector3()
 var locked: bool = false
-onready var udelta: float = get_node("/root/root").udelta
 onready var player: KinematicBody = get_parent()
 
 func process_input(input_data: Dictionary):
@@ -46,7 +45,7 @@ func process_input(input_data: Dictionary):
 		velocity.y = jump_height
 		cur_jump += 1
 	
-	velocity.y -= gravity * udelta
+	velocity.y -= gravity * state.UDELTA
 
 	var _speed: float
 	if input_data.forward && input_data.sprint:
@@ -65,7 +64,7 @@ func process_input(input_data: Dictionary):
 	if !is_on_floor:
 		_temp_accel *= air_control
 	# interpolation
-	_temp_vel = _temp_vel.linear_interpolate(_target, _temp_accel * udelta)
+	_temp_vel = _temp_vel.linear_interpolate(_target, _temp_accel * state.UDELTA)
 	velocity.x = _temp_vel.x
 	velocity.z = _temp_vel.z
 	# clamping

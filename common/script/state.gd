@@ -3,14 +3,42 @@ extends Node
 var current_map_name: String = "node_that_will_never_exist_in_the_scene_hierarchy"
 var feature: String
 
+#---------------------------#
+
+# TODO: Dont hardcode this and instead send it with server info
+# Preferably also implement gamemodes
+const PLAYERS_NEEDED: int = 2
+const GAME_START_COOLDOWN: float = 10.0
+
+#---------------------------#
+
+var counter: float = 0.0
+var frame: int = 0
+const UDELTA: float = 1.0 / 60
+
+signal new_frame
+
+func _process(delta: float) -> void:
+	counter += delta
+	if counter < UDELTA:
+		return
+	counter -= UDELTA
+	frame += 1
+	emit_signal("new_frame")
+
+func did_pass(start_frame: int, max_time: float) -> bool:
+	return ((frame - start_frame) * UDELTA) >= max_time
+
+#---------------------------#
+
 func entity(name: String) -> String:
 	return "res://common/entity/" + name + ".tscn"
 
 func change_map_to(name: String, is_game_map: bool = true) -> void:
-	plog("Map before change: " + current_map_name)
-	if has_node(current_map_name):
-		plog("Removing map " + current_map_name)
-		get_node(current_map_name).queue_free()
+	pdbg("Map before change: " + current_map_name)
+	if get_node("/root/root").has_node(current_map_name):
+		pdbg("Removing map " + current_map_name)
+		get_node("/root/root").get_node(current_map_name).queue_free()
 	current_map_name = name
 	
 	plog("Loading map " + name)
@@ -20,17 +48,21 @@ func change_map_to(name: String, is_game_map: bool = true) -> void:
 		map_node.set_script(load("res://" + feature + "/script/game_logic.gd"))
 		if feature == "server":
 			map_node.add_child(load("res://server/map_sp/" + name + ".tscn").instance())
-		elif feature == "client":
+		else:
 			map_node.add_child(load("res://client/map_vis/" + name + ".tscn").instance())
 			map_node.add_child(load("res://client/ui/hud.tscn").instance())
 		map_node.add_child(load("res://common/map_col/" + name + ".tscn").instance())
 	else:
-		map_node = load("res://" + feature + "/ui/" + name + ".tscn").instance()
+		if feature == "client":
+			map_node = load("res://client/ui/" + name + ".tscn").instance()
+		else:
+			map_node = load("res://server/" + name + ".tscn").instance()
 	
 	map_node.set_name(name)
-	call_deferred("add_child", map_node)
+	get_node("/root/root").call_deferred("add_child", map_node)
 
-#### LOGGING UTILITIES ####
+#---------------------------#
+
 func plog(text: String) -> void:
 	print("[INFO] ", "[", time_formatted(), "] -> ", text)
 
@@ -60,3 +92,5 @@ func read_conf():
 	if validate_json(content):
 		return false
 	return parse_json(content)
+
+#---------------------------#

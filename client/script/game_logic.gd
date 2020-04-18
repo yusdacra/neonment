@@ -5,12 +5,12 @@ var last_ss_timestamp: int = -1 # Timestamp of the last received snapshot
 var last_pi_timestamp: int = 0 # Timestamp of the input the server last processed
 var input_timestamp: int = 0 # Timestamp of the last input sent
 var sent_inputs: Dictionary = {} # Holds sent inputs that the server hasn't processed & sent back to us yet
-var current_time: float = 0.0
 var player_node: KinematicBody
 onready var networking: Node = get_node("/root/root")
 
 func _ready() -> void:
-	networking.connect("disconnected", self, "_on_disconnect")
+	state.connect("new_frame", self, "process")
+	networking.connect("disconnected", self, "on_disconnect")
 	networking.connect("new_player", self, "spawn_player")
 	networking.connect("player_left", self, "remove_player")
 	networking.connect("received_snapshot", self, "apply_snapshot")
@@ -25,16 +25,9 @@ func _ready() -> void:
 func _input(event) -> void:
 	# TODO: Replace this with a "pause" menu
 	if event.is_action_pressed("quit"):
-		get_tree().set_network_peer(null)
-		_on_disconnect()
+		get_tree().emit_signal("server_disconnected", "Disconnect requested.")
 
-func _process(delta: float) -> void:
-	current_time += delta
-	if current_time < networking.udelta:
-		return
-	# Substract update delta from the counter, this is to minimize deviations
-	current_time -= networking.udelta
-
+func process() -> void:
 	var idata = {
 		pinput = input.gather_input(),
 		timestamp = input_timestamp,
@@ -52,25 +45,22 @@ func _process(delta: float) -> void:
 		else:
 			# If not, process it
 			player_node.process_input(sent_inputs[itimestamp].pinput)
-	
-	#print("These are the inputs that aren't processed yet: ", sent_inputs)
 
-func _on_disconnect() -> void:
-	utils.plog("Disconnected from server")
-	utils.change_map_to("main_menu", false)
+func on_disconnect(reason: String) -> void:
+	state.change_map_to("multiplayer", false)
 
 ##### SPAWN CODE #####
 
 func remove_player(id: int) -> void:
 	get_node(str(id)).queue_free()
-	utils.pdbg("Removed player with id " + str(id))
+	state.pdbg("Removed player with id " + str(id))
 
 func spawn_players() -> void:
 	for p in networking.players.values():
 		spawn_player(p)
 
 func spawn_player(pinfo: Dictionary, spawn_point: Vector3 = Vector3(0, 20, 0)) -> void:
-	var new_player: KinematicBody = load(utils.entity(pinfo.classname)).instance()
+	var new_player: KinematicBody = load(state.entity(pinfo.classname)).instance()
 	new_player.set_name(str(pinfo.id))
 	if pinfo.id != networking.player.id:
 		# If not local player, add the body (so that the local player can see others)
@@ -104,10 +94,10 @@ func apply_snapshot(ss: Dictionary) -> void:
 			from_to[id] = {
 				from = ss.player_states[id].pstate,
 				to = ss.player_states[id].pstate,
-				time = networking.udelta,
+				time = state.UDELTA,
 			}
 		
-		if from_to[id].time < networking.udelta:
+		if from_to[id].time < state.UDELTA:
 			from_to[id].time += get_process_delta_time()
 		else:
 			return
