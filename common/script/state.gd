@@ -5,6 +5,13 @@ var feature: String
 
 #---------------------------#
 
+var players: Dictionary = {}
+var server_info: Dictionary = {
+	name = "Server",
+	max_players = 6,
+	current_map = "test",
+}
+
 # TODO: Dont hardcode this and instead send it with server info
 # Preferably also implement gamemodes
 const PLAYERS_NEEDED: int = 2

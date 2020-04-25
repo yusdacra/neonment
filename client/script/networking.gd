@@ -1,16 +1,9 @@
 extends Node
 
-var players: Dictionary = {}
 var player: Dictionary = {
 	id = 1,
 	name = "Player",
 	classname = "test_player",
-}
-
-var server_info: Dictionary = {
-	name = "Server",
-	max_players = 6,
-	current_map = "test",
 }
 
 signal connection_success
@@ -46,7 +39,7 @@ func on_connection_fail(reason: String = "Unknown reason.") -> void:
 
 func on_disconnect(reason: String = "Unknown reason.") -> void:
 	get_tree().set_network_peer(null)
-	players.clear()
+	state.players.clear()
 	state.plog("Disconnected from the server: " + reason)
 	emit_signal("disconnected", reason)
 
@@ -77,18 +70,18 @@ func send_ready(ready: bool) -> void:
 #---------------------------#
 
 remote func register_player(pinfo: Dictionary) -> void:
-	players[pinfo.id] = pinfo
+	state.players[pinfo.id] = pinfo
 	emit_signal("new_player", pinfo)
 
 remote func register_players(psinfo: Dictionary) -> void:
-	players = psinfo
+	state.players = psinfo
 
 remote func unregister_player(id: int) -> void:
-	players.erase(id)
+	state.players.erase(id)
 	emit_signal("player_left", id)
 
 remote func sv_info(svinfo: Dictionary) -> void:
-	server_info = svinfo
+	state.server_info = svinfo
 	rpc_id(1, "register_player", player)
 	emit_signal("connection_success")
 

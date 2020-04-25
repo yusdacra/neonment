@@ -32,6 +32,6 @@ func _process(_delta) -> void:
 
 func _on_player_list_changed(_no) -> void:
 	player_list.clear()
-	for p in networking.players.values():
+	for p in state.players.values():
 		player_list.add_item(p.name, null, false)
 		state.pdbg("Player with name " + p.name + " has been added to the player list node!")

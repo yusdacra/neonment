@@ -17,7 +17,7 @@ func _ready() -> void:
 func update_state() -> void:
 	# Replace this with better code to handle client quit support?
 	# You know what i mean
-	if networking.players.empty():
+	if state.players.empty():
 		state.change_map_to("lobby", false)
 		return
 	
@@ -26,7 +26,7 @@ func update_state() -> void:
 		timestamp = ss_timestamp,
 	}
 	
-	for id in networking.players:
+	for id in state.players:
 		var inode: KinematicBody = get_node(str(id))
 		if inputs[id].empty():
 			inode.process_input(
@@ -53,7 +53,7 @@ func update_state() -> void:
 		inputs[id].clear()
 		ss.player_states[id] = state
 	
-	if networking.players.size() > 0:
+	if state.players.size() > 0:
 		networking.send_snapshot(ss)
 		ss_timestamp += 1
 
@@ -61,13 +61,13 @@ func spawn_player(pinfo: Dictionary) -> void:
 	inputs[pinfo.id] = []
 	pi_input_timestamp[pinfo.id] = 0
 	var new_player: KinematicBody = load(state.entity(pinfo.classname)).instance()
-	new_player.set_translation(get_node("spawn_points").get_children()[randi() % int(networking.server_info.max_players)].get_translation())
+	new_player.set_translation(get_node("spawn_points").get_children()[randi() % int(state.server_info.max_players)].get_translation())
 	new_player.set_name(str(pinfo.id))
 	add_child(new_player)
 	state.plog("Spawned player " + str(pinfo.id))
 
 func spawn_players() -> void:
-	for p in networking.players.values():
+	for p in state.players.values():
 		spawn_player(p)
 
 func remove_player(id: int) -> void:

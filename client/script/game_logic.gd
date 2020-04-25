@@ -56,7 +56,7 @@ func remove_player(id: int) -> void:
 	state.pdbg("Removed player with id " + str(id))
 
 func spawn_players() -> void:
-	for p in networking.players.values():
+	for p in state.players.values():
 		spawn_player(p)
 
 func spawn_player(pinfo: Dictionary, spawn_point: Vector3 = Vector3(0, 20, 0)) -> void:

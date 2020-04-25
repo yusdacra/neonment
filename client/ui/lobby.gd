@@ -31,7 +31,7 @@ func update_ui(rdict: Dictionary) -> void:
 	for p in rdict:
 		var text: String = networking.player.name
 		if p != networking.player.id:
-			text = networking.players[p].name
+			text = state.players[p].name
 		if rdict[p]:
 			text += " - Ready"
 		else:
@@ -56,4 +56,4 @@ func update_ui(rdict: Dictionary) -> void:
 		last_check_frame = 0
 
 func start_game_map() -> void:
-	state.change_map_to(networking.server_info.current_map)
+	state.change_map_to(state.server_info.current_map)
