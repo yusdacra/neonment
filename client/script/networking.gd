@@ -94,6 +94,9 @@ remote func receive_ready_dict(rdict: Dictionary) -> void:
 remote func receive_start_game_map() -> void:
 	emit_signal("game_map_started")
 
+remote func receive_goto_lobby() -> void:
+	state.change_map_to("lobby", false)
+
 remote func sv_register() -> void:
 	emit_signal("registered_by_sv")
 

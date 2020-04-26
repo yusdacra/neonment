@@ -1,20 +1,27 @@
 extends Node
 
 var current_map_name: String = "node_that_will_never_exist_in_the_scene_hierarchy"
+# Stores the "feature" of the game, ie. server or client
 var feature: String
 
 #---------------------------#
 
 var players: Dictionary = {}
+# This only contains stuff we need to send to a client
 var server_info: Dictionary = {
 	name = "Server",
-	max_players = 6,
-	current_map = "test",
+	max_clients = 6,
+	gamemode = {
+		name = "test_mode",
+		map = "test",
+		description = "you do stuff to win",
+		max_players = 2,
+		team_count = 2, # 1 or below means "free for all"
+		goal_point = 100,
+	},
 }
 
-# TODO: Dont hardcode this and instead send it with server info
-# Preferably also implement gamemodes
-const PLAYERS_NEEDED: int = 2
+# Decides after how many seconds the game will start
 const GAME_START_COOLDOWN: float = 10.0
 
 #---------------------------#
@@ -68,7 +75,7 @@ func change_map_to(name: String, is_game_map: bool = true) -> void:
 	map_node.set_name(name)
 	get_node("/root/root").call_deferred("add_child", map_node)
 
-#---------------------------#
+#Some utilities to log stuff#
 
 func plog(text: String) -> void:
 	print("[INFO] ", "[", time_formatted(), "] -> ", text)
@@ -90,6 +97,8 @@ func parse_time(time: int) -> String:
 	elif t.length() == 0:
 		t = "00"
 	return t
+
+#Config file stuff#
 
 func read_conf():
 	var file := File.new()

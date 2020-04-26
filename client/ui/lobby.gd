@@ -38,7 +38,7 @@ func update_ui(rdict: Dictionary) -> void:
 			all_true = false
 			text += " - Not Ready"
 		get_node("m/h/v/plist").add_item(text, null, false)
-	if rdict.size() == state.PLAYERS_NEEDED:
+	if rdict.size() == state.server_info.gamemode.max_players:
 		if all_true:
 			last_check_frame = state.frame
 			get_node("c2/ready").set_disabled(true)
@@ -48,7 +48,7 @@ func update_ui(rdict: Dictionary) -> void:
 		else:
 			get_node("m/h/v/timer").set_text("Players - Everyone isn't ready yet!")
 	else:
-		get_node("m/h/v/timer").set_text("Players - Not enough players (" + str(rdict.size()) + "/" + str(state.PLAYERS_NEEDED) + ")")
+		get_node("m/h/v/timer").set_text("Players - Not enough players (" + str(rdict.size()) + "/" + str(state.server_info.gamemode.max_players) + ")")
 	
 	if last_check_frame > 0:
 		get_node("c2/ready").set_disabled(false)
@@ -56,4 +56,4 @@ func update_ui(rdict: Dictionary) -> void:
 		last_check_frame = 0
 
 func start_game_map() -> void:
-	state.change_map_to(state.server_info.current_map)
+	state.change_map_to(state.server_info.gamemode.map)

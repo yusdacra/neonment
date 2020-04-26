@@ -17,8 +17,9 @@ func _ready() -> void:
 func update_state() -> void:
 	# Replace this with better code to handle client quit support?
 	# You know what i mean
-	if state.players.empty():
+	if state.players.size() < state.server_info.gamemode.max_players:
 		state.change_map_to("lobby", false)
+		networking.send_goto_lobby()
 		return
 	
 	var ss: Dictionary = {
@@ -61,7 +62,7 @@ func spawn_player(pinfo: Dictionary) -> void:
 	inputs[pinfo.id] = []
 	pi_input_timestamp[pinfo.id] = 0
 	var new_player: KinematicBody = load(state.entity(pinfo.classname)).instance()
-	new_player.set_translation(get_node("spawn_points").get_children()[randi() % int(state.server_info.max_players)].get_translation())
+	new_player.set_translation(get_node("spawn_points").get_children()[randi() % int(state.server_info.max_clients)].get_translation())
 	new_player.set_name(str(pinfo.id))
 	add_child(new_player)
 	state.plog("Spawned player " + str(pinfo.id))

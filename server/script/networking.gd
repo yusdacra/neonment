@@ -17,8 +17,8 @@ func _ready() -> void:
 	if config is Dictionary:
 		port = config.port
 		state.server_info.name = config.name
-		state.server_info.max_players = config.max_players
-		state.server_info.current_map = config.map
+		state.server_info.max_clients = config.max_clients
+		state.server_info.gamemode = config.gamemode
 	
 	create_server()
 	state.change_map_to("lobby", false)
@@ -38,14 +38,13 @@ func client_disconnected(id) -> void:
 func create_server() -> void:
 	state.plog("Starting server with configuration:")
 	state.plog("Server name: " + str(state.server_info.name))
-	state.plog("Map: " + str(state.server_info.current_map))
 	state.plog("Port: " + str(port))
-	state.plog("Max players: " + str(state.server_info.max_players))
+	state.plog("Max clients: " + str(state.server_info.max_clients))
 	
 	var sv := NetworkedMultiplayerENet.new()
 	sv.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_ZSTD)
 	
-	match sv.create_server(port, state.server_info.max_players):
+	match sv.create_server(port, state.server_info.max_clients):
 		ERR_ALREADY_IN_USE:
 			state.perr("A server is already running, close it and try again.")
 			get_tree().quit(ERR_ALREADY_IN_USE)
@@ -71,6 +70,9 @@ func send_snapshot(ss: Dictionary) -> void:
 func send_start_game_map() -> void:
 	rpc("receive_start_game_map")
 
+func send_goto_lobby() -> void:
+	rpc("receive_goto_lobby")
+
 func send_rdict(rdict: Dictionary) -> void:
 	rpc("receive_ready_dict", rdict)
 
@@ -79,7 +81,7 @@ func send_rdict(rdict: Dictionary) -> void:
 remote func register_player(pinfo: Dictionary) -> void:
 	# Check if server is full
 	# NOTE: when implementing spectators, check for spectator max player list
-	if state.players.size() >= state.PLAYERS_NEEDED:
+	if state.players.size() >= state.server_info.gamemode.max_players:
 		# Notify connected player and stop registering
 		rpc_id(pinfo.id, "sv_full")
 		return
