@@ -11,13 +11,10 @@ var players: Dictionary = {}
 var server_info: Dictionary = {
 	name = "Server",
 	max_clients = 6,
-	gamemode = {
-		name = "test_mode",
+	game = {
+		team_count = 0,
+		max_players = 0,
 		map = "test",
-		description = "you do stuff to win",
-		max_players = 2,
-		team_count = 2, # 1 or below means "free for all"
-		goal_point = 100,
 	},
 }
 

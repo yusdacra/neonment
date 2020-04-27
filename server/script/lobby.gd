@@ -16,7 +16,7 @@ func _ready() -> void:
 
 func update() -> void:
 	if last_check_frame > 0 && state.did_pass(last_check_frame, state.GAME_START_COOLDOWN):
-		state.change_map_to(state.server_info.gamemode.map)
+		state.change_map_to(state.server_info.game.map)
 
 func toggle_ready(ready: bool, id: int) -> void:
 	state.pdbg("Ready received: " + str(ready) + " " + str(id))
@@ -39,10 +39,10 @@ func add_ready(p: Dictionary) -> void:
 func try_start_game_timer() -> void:
 	state.pdbg("Ready list: " + str(ready_list))
 	networking.send_rdict(ready_list)
-	state.pdbg("lcf test: " + str(last_check_frame > 0) + " players max test: " + str(ready_list.size() < state.server_info.gamemode.max_players))
+	state.pdbg("lcf test: " + str(last_check_frame > 0) + " players max test: " + str(ready_list.size() < state.server_info.game.max_players))
 	if last_check_frame > 0:
 		return
-	if ready_list.size() < state.server_info.gamemode.max_players:
+	if ready_list.size() < state.server_info.game.max_players:
 		return
 	for r in ready_list.values():
 		if !r:

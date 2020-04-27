@@ -52,7 +52,7 @@ func on_disconnect(reason: String) -> void:
 ##### SPAWN CODE #####
 
 func remove_player(id: int) -> void:
-	get_node(str(id)).queue_free()
+	get_node(str(id)).free()
 	state.pdbg("Removed player with id " + str(id))
 
 func spawn_players() -> void:

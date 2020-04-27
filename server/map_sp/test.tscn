@@ -2,32 +2,12 @@
 
 [node name="spawn_points" type="Spatial"]
 
-[node name="0" type="Position3D" parent="."]
+[node name="t1" type="Spatial" parent="."]
+
+[node name="0" type="Position3D" parent="t1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.66374, 0 )
 
-[node name="1" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.66374, 2.98815 )
+[node name="t2" type="Spatial" parent="."]
 
-[node name="2" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.00906, 3.66374, 2.98815 )
-
-[node name="3" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.00906, 3.66374, -0.0652757 )
-
-[node name="4" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.00906, 3.66374, -3.48732 )
-
-[node name="5" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.539285, 3.66374, -3.48732 )
-
-[node name="6" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5213, 3.66374, -3.48732 )
-
-[node name="7" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5213, 3.66374, -0.434802 )
-
-[node name="8" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5213, 3.66374, 2.60935 )
-
-[node name="9" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0113146, 3.66374, 8.09544 )
+[node name="1" type="Position3D" parent="t2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.17576, 3.66374, 2.98815 )

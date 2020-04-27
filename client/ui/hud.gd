@@ -6,6 +6,7 @@ export var pr_path: NodePath
 onready var player_row: BoxContainer = get_node(pr_path)
 export var pn_path: NodePath
 onready var player_name: Label = get_node(pn_path)
+
 onready var networking: Node = get_node("/root/root")
 var beforeb: bool = false
 

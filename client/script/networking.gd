@@ -38,7 +38,7 @@ func on_connection_fail(reason: String = "Unknown reason.") -> void:
 	emit_signal("connection_fail", reason)
 
 func on_disconnect(reason: String = "Unknown reason.") -> void:
-	get_tree().set_network_peer(null)
+	get_tree().call_deferred("set_network_peer", null)
 	state.players.clear()
 	state.plog("Disconnected from the server: " + reason)
 	emit_signal("disconnected", reason)
@@ -91,11 +91,8 @@ remote func receive_snapshot(ss: Dictionary) -> void:
 remote func receive_ready_dict(rdict: Dictionary) -> void:
 	emit_signal("received_rdict", rdict)
 
-remote func receive_start_game_map() -> void:
-	emit_signal("game_map_started")
-
-remote func receive_goto_lobby() -> void:
-	state.change_map_to("lobby", false)
+remote func receive_change_map(map_name: String, game_map: bool) -> void:
+	state.change_map_to(map_name, game_map)
 
 remote func sv_register() -> void:
 	emit_signal("registered_by_sv")
