@@ -20,6 +20,8 @@ func _ready() -> void:
 		state.server_info.name = config.name
 		state.server_info.max_clients = config.max_clients
 		state.server_info.game.map = config.map
+	elif config is bool && config:
+		pass
 	else:
 		state.perr("Could not parse config")
 		get_tree().quit(1)

@@ -22,7 +22,6 @@ config/icon="res://icon.png"
 [autoload]
 
 state="*res://common/script/state.gd"
-input="*res://client/script/input.gd"
 
 [compression]
 

@@ -99,7 +99,12 @@ func parse_time(time: int) -> String:
 
 func read_conf():
 	var file := File.new()
-	file.open("user://" + feature + "_config.json", File.READ)
+	var open_err = file.open("user://" + feature + "_config.json", File.READ)
+	if open_err == ERR_FILE_NOT_FOUND:
+		return true
+	elif open_err != OK:
+		return false
+	
 	var content: String = file.get_as_text()
 	file.close()
 	if validate_json(content):

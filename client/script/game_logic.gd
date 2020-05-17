@@ -6,6 +6,7 @@ var last_pi_timestamp: int = 0 # Timestamp of the input the server last processe
 var input_timestamp: int = 0 # Timestamp of the last input sent
 var sent_inputs: Dictionary = {} # Holds sent inputs that the server hasn't processed & sent back to us yet
 var player_node: KinematicBody
+var mouse_axis := Vector2()
 onready var networking: Node = get_node("/root/root")
 
 func _ready() -> void:
@@ -23,13 +24,15 @@ func _ready() -> void:
 	spawn_players()
 
 func _input(event) -> void:
+	if event is InputEventMouseMotion:
+		mouse_axis = event.relative
 	# TODO: Replace this with a "pause" menu
 	if event.is_action_pressed("quit"):
 		get_tree().emit_signal("server_disconnected", "Disconnect requested.")
 
 func process() -> void:
 	var idata = {
-		pinput = input.gather_input(),
+		pinput = gather_input(),
 		timestamp = input_timestamp,
 	}
 	input_timestamp += 1
@@ -103,3 +106,22 @@ func apply_snapshot(ss: Dictionary) -> void:
 			return
 		
 		pnode.apply_state(from_to[id])
+
+func gather_input() -> Dictionary:
+	var idata: Dictionary = {
+		forward = Input.is_action_pressed("move_forward"),
+		backward = Input.is_action_pressed("move_backward"),
+		left = Input.is_action_pressed("move_left"),
+		right = Input.is_action_pressed("move_right"),
+		jump = Input.is_action_just_pressed("move_jump"), # NOTE: don't make this "pressed" it breaks double jumping
+		sprint = Input.is_action_pressed("move_sprint"),
+		mouse_axis = mouse_axis,
+		ability = [
+			Input.is_action_just_pressed("ability_0"),
+			Input.is_action_just_pressed("ability_1"),
+			Input.is_action_just_pressed("ability_2"),
+			Input.is_action_just_pressed("ability_3"),
+		],
+	}
+	mouse_axis = Vector2()
+	return idata
