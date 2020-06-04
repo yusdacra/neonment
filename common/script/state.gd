@@ -7,7 +7,7 @@ var feature: String
 #---------------------------#
 
 var players: Dictionary = {}
-# This only contains stuff we need to send to a client
+# This only contains information we need to send to a client
 var server_info: Dictionary = {
 	name = "Server",
 	max_clients = 6,
@@ -18,7 +18,7 @@ var server_info: Dictionary = {
 	},
 }
 
-# Decides after how many seconds the game will start
+# After how many seconds a game will start
 const GAME_START_COOLDOWN: float = 10.0
 
 #---------------------------#
@@ -27,6 +27,7 @@ var counter: float = 0.0
 var frame: int = 0
 const UDELTA: float = 1.0 / 60
 
+# This is used so that the game is more deterministic, and is controlled from a single source
 signal new_frame
 
 func _process(delta: float) -> void:
@@ -37,8 +38,9 @@ func _process(delta: float) -> void:
 	frame += 1
 	emit_signal("new_frame")
 
+# Checks if the time that passed between start_frame and current frame is bigger than given max_time
 func did_pass(start_frame: int, max_time: float) -> bool:
-	return ((frame - start_frame) * UDELTA) >= max_time
+	return ((frame - start_frame) * UDELTA) > max_time
 
 #---------------------------#
 
@@ -72,8 +74,7 @@ func change_map_to(name: String, is_game_map: bool = true) -> void:
 	map_node.set_name(name)
 	get_node("/root/root").call_deferred("add_child", map_node)
 
-#Some utilities to log stuff#
-
+# Some utilities to pretty print stuff
 func plog(text: String) -> void:
 	print("[INFO] ", "[", time_formatted(), "] -> ", text)
 
@@ -95,7 +96,7 @@ func parse_time(time: int) -> String:
 		t = "00"
 	return t
 
-#Config file stuff#
+# Config file stuff
 
 func read_conf():
 	var file := File.new()

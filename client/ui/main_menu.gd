@@ -3,6 +3,10 @@ extends Control
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("quit"):
+		_on_quit_pressed()
+
 func _on_multi_pressed():
 	state.change_map_to("multiplayer", false)
 
