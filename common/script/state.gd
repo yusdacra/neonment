@@ -27,10 +27,14 @@ var counter: float = 0.0
 var frame: int = 0
 const UDELTA: float = 1.0 / 60
 
+var paused: bool = false
+
 # This is used so that the game is more deterministic, and is controlled from a single source
 signal new_frame
 
 func _process(delta: float) -> void:
+	if paused:
+		return
 	counter += delta
 	if counter < UDELTA:
 		return
@@ -42,10 +46,10 @@ func _process(delta: float) -> void:
 func did_pass(start_frame: int, max_time: float) -> bool:
 	return ((frame - start_frame) * UDELTA) > max_time
 
-#---------------------------#
+func toggle_pause() -> void:
+	paused = !paused
 
-func entity(name: String) -> String:
-	return "res://common/entity/" + name + ".tscn"
+#---------------------------#
 
 func change_map_to(name: String, is_game_map: bool = true) -> void:
 	pdbg("Map before change: " + current_map_name)

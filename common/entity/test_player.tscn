@@ -4,10 +4,6 @@
 [ext_resource path="res://common/script/movement.gd" type="Script" id=2]
 [ext_resource path="res://common/script/ability/ability.gd" type="Script" id=3]
 
-
-
-
-
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.5
 

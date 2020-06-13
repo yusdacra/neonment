@@ -21,7 +21,8 @@ func _ready() -> void:
 	# For convenience, store the player node inside a variable
 	player_node = get_node(str(networking.player.id))
 	# Spawn other players
-	spawn_players()
+	for p in state.players.values():
+		spawn_player(p)
 
 func _input(event) -> void:
 	if event is InputEventMouseMotion:
@@ -38,7 +39,7 @@ func process() -> void:
 	input_timestamp += 1
 	networking.send_input_data(idata)
 	# Cache the input for later use
-	sent_inputs[idata.timestamp] = idata
+	sent_inputs[idata.timestamp1] = idata
 	
 	# Predict server state using the inputs that hasn't been recognized by the server
 	for itimestamp in sent_inputs:
@@ -52,18 +53,13 @@ func process() -> void:
 func on_disconnect(reason: String) -> void:
 	state.change_map_to("multiplayer", false)
 
-##### SPAWN CODE #####
-
+# Remove the player from the scene
 func remove_player(id: int) -> void:
 	get_node(str(id)).free()
 	state.pdbg("Removed player with id " + str(id))
 
-func spawn_players() -> void:
-	for p in state.players.values():
-		spawn_player(p)
-
 func spawn_player(pinfo: Dictionary, spawn_point: Vector3 = Vector3(0, 20, 0)) -> void:
-	var new_player: KinematicBody = load(state.entity(pinfo.classname)).instance()
+	var new_player: KinematicBody = load("res://common/entity/" + pinfo.classname + ".tscn").instance()
 	new_player.set_name(str(pinfo.id))
 	if pinfo.id != networking.player.id:
 		# If not local player, add the body (so that the local player can see others)
@@ -74,8 +70,6 @@ func spawn_player(pinfo: Dictionary, spawn_point: Vector3 = Vector3(0, 20, 0)) -
 		# NOTE: Viewmodel should be spawned here
 	new_player.set_translation(spawn_point)
 	add_child(new_player)
-
-##### SPAWN CODE #####
 
 func apply_snapshot(ss: Dictionary) -> void:
 	if ss.timestamp <= last_ss_timestamp:
@@ -113,7 +107,7 @@ func gather_input() -> Dictionary:
 		backward = Input.is_action_pressed("move_backward"),
 		left = Input.is_action_pressed("move_left"),
 		right = Input.is_action_pressed("move_right"),
-		jump = Input.is_action_just_pressed("move_jump"), # NOTE: don't make this "pressed" it breaks double jumping
+		jump = Input.is_action_just_pressed("move_jump"), # NOTE: don't make this "is_action_pressed" it breaks double jumping
 		sprint = Input.is_action_pressed("move_sprint"),
 		mouse_axis = mouse_axis,
 		ability = [
