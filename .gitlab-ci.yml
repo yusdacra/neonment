@@ -2,70 +2,69 @@ image: barichello/godot-ci:3.2
 
 stages:
   - export
-  - deploy
 
 variables:
   SV_EXPORT_NAME: NeonmentServer
   CL_EXPORT_NAME: NeonmentClient
+  LINUX_DIR: builds/linux
+  WINDOWS_DIR: builds/windows
+  MAC_DIR: builds/mac
 
 before_script:
-  - mkdir -v -p builds/linux
-  - mkdir -v -p builds/windows
-  - mkdir -v -p builds/mac
+  - mkdir -v -p $LINUX_DIR
+  - mkdir -v -p $WINDOWS_DIR
+  - mkdir -v -p $MAC_DIR
 
 linux-server:
-  when: manual
   stage: export
   script:
-    - godot -v --export "Linux Server" ./builds/$SV_EXPORT_NAME.x86_64
+    - godot -v --export-debug "Linux Server" ./$LINUX_DIR/$SV_EXPORT_NAME.x86_64
   artifacts:
     name: $SV_EXPORT_NAME-$CI_JOB_NAME
     paths:
-      - builds/linux
+      - $LINUX_DIR
 
 linux-client:
   stage: export
   script:
-    - godot -v --export "Linux Client" ./builds/$CL_EXPORT_NAME.x86_64
+    - godot -v --export-debug "Linux Client" ./$LINUX_DIR/$CL_EXPORT_NAME.x86_64
   artifacts:
     name: $CL_EXPORT_NAME-$CI_JOB_NAME
     paths:
-      - builds/linux
+      - $LINUX_DIR
 
 windows-server:
-  when: manual
   stage: export
   script:
-    - godot -v --export "Windows Server" ./builds/$SV_EXPORT_NAME.exe
+    - godot -v --export-debug "Windows Server" ./$WINDOWS_DIR/$SV_EXPORT_NAME.exe
   artifacts:
     name: $SV_EXPORT_NAME-$CI_JOB_NAME
     paths:
-      - builds/windows
+      - $WINDOWS_DIR
 
 windows-client:
   stage: export
   script:
-    - godot -v --export "Windows Client" ./builds/$CL_EXPORT_NAME.exe
+    - godot -v --export-debug "Windows Client" ./$WINDOWS_DIR/$CL_EXPORT_NAME.exe
   artifacts:
     name: $CL_EXPORT_NAME-$CI_JOB_NAME
     paths:
-      - builds/windows
+      - $WINDOWS_DIR
 
 mac-server:
-  when: manual
   stage: export
   script:
-    - godot -v --export "Mac Server" ./builds/$SV_EXPORT_NAME.zip
+    - godot -v --export-debug "Mac Server" ./$MAC_DIR/$SV_EXPORT_NAME.zip
   artifacts:
     name: $SV_EXPORT_NAME-$CI_JOB_NAME
     paths:
-      - builds/mac
+      - $MAC_DIR
 
 mac-client:
   stage: export
   script:
-    - godot -v --export "Mac Client" ./builds/$CL_EXPORT_NAME.zip
+    - godot -v --export-debug "Mac Client" ./$MAC_DIR/$CL_EXPORT_NAME.zip
   artifacts:
     name: $CL_EXPORT_NAME-$CI_JOB_NAME
     paths:
-      - builds/mac
+      -  $MAC_DIR
