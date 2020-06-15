@@ -1,8 +1,8 @@
 # Contributing
 
-Welcome! This project accepts any kind of contribution, be it code, assets, docu
-mentation or localization. You are expected to follow the guidelines below for
-any contribution regardless of size. If you have questions after reading this
+Welcome! This project accepts any kind of contribution, be it code, assets,
+documentation or localization. You are expected to follow the guidelines below
+for any contribution regardless of size. If you have questions after reading this
 document please ask them on Matrix / Discord.
 
 In general, before starting to work on anything please make sure to discuss your
