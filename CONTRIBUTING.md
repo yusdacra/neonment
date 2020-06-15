@@ -1,7 +1,7 @@
 # Contributing
 
 Welcome! This project accepts any kind of contribution, be it code, assets,
-documentation or localization. You are expected to follow the guidelines below
+documentation, testing or localization. You are expected to follow the guidelines below
 for any contribution regardless of size. If you have questions after reading this
 document please ask them on Matrix / Discord.
 
@@ -20,3 +20,8 @@ Make sure that:
 - The project builds fine with both debug and release templates.
 - The change is tested, and does not create a regression in related parts of the
 project.
+
+## Reporting a bug / requesting a feature
+
+Fill out the related templates in issue tracker. Non-reproducable bugs will have a lower
+priority.
