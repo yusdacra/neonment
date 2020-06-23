@@ -1,7 +1,11 @@
 extends Node
 
 # This is the general "timer" kind of class for abilities.
-# An ability must implement "execute", "loop" and "end" functions.
+# An ability must implement:
+# _init(properties: Dictionary, player: KinematicBody) # executed once when the ability is created
+# execute() # executed once when the ability is triggered
+# loop() # executed each frame (not including the start frame of the ability)
+# end() # executed once when the ability duration wears off
 
 export var duration: float = 1.0
 export var cooldown: float = 5.0

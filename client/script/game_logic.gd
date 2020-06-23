@@ -39,7 +39,7 @@ func process() -> void:
 	input_timestamp += 1
 	networking.send_input_data(idata)
 	# Cache the input for later use
-	sent_inputs[idata.timestamp1] = idata
+	sent_inputs[idata.timestamp] = idata
 	
 	# Predict server state using the inputs that hasn't been recognized by the server
 	for itimestamp in sent_inputs:
