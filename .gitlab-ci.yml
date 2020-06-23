@@ -24,8 +24,8 @@ before_script:
       - /icon.{png, import}
       - /project.godot
       - /export_presets.cfg
-      - /common
-      - /client
+      - /common/*
+      - /client/*
 
 .server-template: &server-template
   stage: export
@@ -36,8 +36,8 @@ before_script:
       - /icon.{png, import}
       - /project.godot
       - /export_presets.cfg
-      - /common
-      - /server
+      - /common/*
+      - /server/*
 
 .linux: &linux
   artifacts:
