@@ -28,7 +28,7 @@ func _input(event) -> void:
 	if event is InputEventMouseMotion:
 		mouse_axis = event.relative
 	# TODO: Replace this with a "pause" menu
-	if event.is_action_pressed("quit"):
+	if event.is_action_pressed("ui_cancel"):
 		get_tree().emit_signal("server_disconnected", "Disconnect requested.")
 
 func process() -> void:

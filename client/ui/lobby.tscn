@@ -24,12 +24,12 @@ __meta__ = {
 [node name="h" type="HBoxContainer" parent="m"]
 margin_left = 100.0
 margin_top = 70.0
-margin_right = 924.0
-margin_bottom = 530.0
+margin_right = 1180.0
+margin_bottom = 650.0
 
 [node name="v" type="VBoxContainer" parent="m/h"]
 margin_right = 225.0
-margin_bottom = 460.0
+margin_bottom = 580.0
 size_flags_vertical = 3
 
 [node name="timer" type="Label" parent="m/h/v"]
@@ -40,48 +40,33 @@ text = "Players"
 [node name="plist" type="ItemList" parent="m/h/v"]
 margin_top = 18.0
 margin_right = 225.0
-margin_bottom = 460.0
+margin_bottom = 580.0
 rect_min_size = Vector2( 225, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 items = [ "Playerwithlongname - Not Ready", null, false ]
 
-[node name="c" type="CenterContainer" parent="."]
+[node name="back" type="Button" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -40.0
-margin_right = 133.0
+margin_top = -30.0
+margin_right = 129.0
+text = "<-- Go Back"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="back" type="Button" parent="c"]
-margin_left = 23.0
-margin_top = 10.0
-margin_right = 109.0
-margin_bottom = 30.0
-text = "<-- Go Back"
-
-[node name="c2" type="CenterContainer" parent="."]
+[node name="ready" type="Button" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -86.0
-margin_top = -40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ready" type="Button" parent="c2"]
-margin_left = 18.0
-margin_top = 10.0
-margin_right = 68.0
-margin_bottom = 30.0
+margin_left = -75.0
+margin_top = -30.0
 toggle_mode = true
 text = "Ready"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="c/back" to="." method="_on_back_pressed"]
-[connection signal="toggled" from="c2/ready" to="." method="_on_ready_toggled"]
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="toggled" from="ready" to="." method="_on_ready_toggled"]

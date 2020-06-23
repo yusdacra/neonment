@@ -19,11 +19,25 @@ before_script:
   stage: export
   artifacts:
     name: $CL_EXPORT_NAME-$CI_JOB_NAME
+  rules:
+    - changes:
+      - "{client,common}/**/*.{gd,tscn}"
+      - ".gitlab-ci.yml"
+      - "export_presets.cfg"
+      - "project.godot"
+      - "icon.{png,import}"
 
 .server-template: &server-template
   stage: export
   artifacts:
     name: $SV_EXPORT_NAME-$CI_JOB_NAME
+  rules:
+    - changes:
+      - "{server,common}/**/*.{gd,tscn}"
+      - ".gitlab-ci.yml"
+      - "export_presets.cfg"
+      - "project.godot"
+      - "icon.{png,import}"
 
 .linux: &linux
   artifacts:

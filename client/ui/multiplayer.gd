@@ -31,7 +31,7 @@ func update_player_info() -> bool:
 	return true
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("quit"):
+	if event.is_action_pressed("ui_cancel"):
 		_on_back_pressed()
 
 func _on_back_pressed():

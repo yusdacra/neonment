@@ -24,33 +24,27 @@ __meta__ = {
 [node name="h" type="HBoxContainer" parent="m"]
 margin_left = 100.0
 margin_top = 70.0
-margin_right = 924.0
-margin_bottom = 530.0
+margin_right = 1180.0
+margin_bottom = 650.0
 
 [node name="v" type="VBoxContainer" parent="m/h"]
 margin_right = 26.0
-margin_bottom = 460.0
+margin_bottom = 580.0
 size_flags_vertical = 3
 
 [node name="l" type="Label" parent="m/h/v"]
 margin_right = 26.0
 margin_bottom = 14.0
-text = "WIP"
+text = "WIP "
 uppercase = true
 
-[node name="c" type="CenterContainer" parent="."]
+[node name="back" type="Button" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -40.0
-margin_right = 133.0
+margin_top = -30.0
+margin_right = 129.0
+text = "<-- Go Back"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="back" type="Button" parent="c"]
-margin_left = 23.0
-margin_top = 10.0
-margin_right = 109.0
-margin_bottom = 30.0
-text = "<-- Go Back"
-[connection signal="pressed" from="c/back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]

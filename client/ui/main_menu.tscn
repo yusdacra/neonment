@@ -11,12 +11,11 @@ __meta__ = {
 }
 
 [node name="menu" type="MarginContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 100.0
-margin_top = 50.0
-margin_right = -100.0
-margin_bottom = -50.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -240.0
+margin_right = 801.0
+margin_bottom = 220.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
@@ -25,57 +24,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="col" type="HBoxContainer" parent="menu"]
-margin_right = 824.0
-margin_bottom = 500.0
-
-[node name="row" type="VBoxContainer" parent="menu/col"]
-margin_right = 74.0
-margin_bottom = 500.0
+[node name="row" type="VBoxContainer" parent="menu"]
+margin_right = 801.0
+margin_bottom = 460.0
 rect_min_size = Vector2( 0, 460 )
 
-[node name="title" type="Label" parent="menu/col/row"]
-margin_right = 74.0
+[node name="title" type="Label" parent="menu/row"]
+margin_right = 801.0
 margin_bottom = 14.0
 text = "Neonment"
 align = 1
 uppercase = true
 
-[node name="center" type="CenterContainer" parent="menu/col/row"]
+[node name="center" type="CenterContainer" parent="menu/row"]
 margin_top = 18.0
-margin_right = 74.0
-margin_bottom = 500.0
+margin_right = 801.0
+margin_bottom = 460.0
 size_flags_vertical = 3
 
-[node name="row" type="VBoxContainer" parent="menu/col/row/center"]
-margin_left = 5.0
-margin_top = 195.0
-margin_right = 68.0
-margin_bottom = 287.0
+[node name="row" type="VBoxContainer" parent="menu/row/center"]
+margin_left = 369.0
+margin_top = 175.0
+margin_right = 432.0
+margin_bottom = 267.0
 
-[node name="multi" type="Button" parent="menu/col/row/center/row"]
+[node name="multi" type="Button" parent="menu/row/center/row"]
 margin_right = 63.0
 margin_bottom = 20.0
 text = "Play"
 
-[node name="settings" type="Button" parent="menu/col/row/center/row"]
+[node name="settings" type="Button" parent="menu/row/center/row"]
 margin_top = 24.0
 margin_right = 63.0
 margin_bottom = 44.0
 text = "Settings"
 
-[node name="credits" type="Button" parent="menu/col/row/center/row"]
+[node name="credits" type="Button" parent="menu/row/center/row"]
 margin_top = 48.0
 margin_right = 63.0
 margin_bottom = 68.0
 text = "Credits"
 
-[node name="quit" type="Button" parent="menu/col/row/center/row"]
+[node name="quit" type="Button" parent="menu/row/center/row"]
 margin_top = 72.0
 margin_right = 63.0
 margin_bottom = 92.0
 text = "Quit"
-[connection signal="pressed" from="menu/col/row/center/row/multi" to="." method="_on_multi_pressed"]
-[connection signal="pressed" from="menu/col/row/center/row/settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="menu/col/row/center/row/credits" to="." method="_on_credits_pressed"]
-[connection signal="pressed" from="menu/col/row/center/row/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="menu/row/center/row/multi" to="." method="_on_multi_pressed"]
+[connection signal="pressed" from="menu/row/center/row/settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="menu/row/center/row/credits" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="menu/row/center/row/quit" to="." method="_on_quit_pressed"]

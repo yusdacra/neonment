@@ -11,7 +11,7 @@ func _ready() -> void:
 	_on_ready_toggled(false)
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("quit"):
+	if event.is_action_pressed("ui_cancel"):
 		_on_back_pressed()
 
 func _on_back_pressed() -> void:
@@ -21,7 +21,7 @@ func on_disconnect(reason: String) -> void:
 	state.change_map_to("multiplayer", false)
 
 func _on_ready_toggled(button_pressed: bool) -> void:
-	get_node("c/back").set_disabled(button_pressed)
+	get_node("back").set_disabled(button_pressed)
 	networking.send_ready(button_pressed)
 
 func update_loop() -> void:
@@ -44,8 +44,8 @@ func update_ui(rdict: Dictionary) -> void:
 	if rdict.size() == state.server_info.game.max_players:
 		if all_true:
 			last_check_frame = state.frame
-			get_node("c2/ready").set_disabled(true)
-			get_node("c/back").set_disabled(true)
+			get_node("ready").set_disabled(true)
+			get_node("back").set_disabled(true)
 			get_node("m/h/v/timer").set_text("Players - All ready! - Starting in " + str(state.GAME_START_COOLDOWN))
 			return
 		else:
@@ -54,6 +54,6 @@ func update_ui(rdict: Dictionary) -> void:
 		get_node("m/h/v/timer").set_text("Players - Not enough players (" + str(rdict.size()) + "/" + str(state.server_info.game.max_players) + ")")
 	
 	if last_check_frame > 0:
-		get_node("c2/ready").set_disabled(false)
-		get_node("c/back").set_disabled(get_node("c2/ready").is_pressed())
+		get_node("ready").set_disabled(false)
+		get_node("back").set_disabled(get_node("ready").is_pressed())
 		last_check_frame = 0
