@@ -11,20 +11,18 @@ __meta__ = {
 }
 
 [node name="center" type="CenterContainer" parent="."]
-anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -43.0
 margin_top = -40.0
-margin_right = 43.0
+margin_right = 133.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="back" type="Button" parent="center"]
+margin_left = 23.0
 margin_top = 10.0
-margin_right = 86.0
+margin_right = 109.0
 margin_bottom = 30.0
 text = "<-- Go Back"
 

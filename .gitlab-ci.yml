@@ -19,25 +19,11 @@ before_script:
   stage: export
   artifacts:
     name: $CL_EXPORT_NAME-$CI_JOB_NAME
-  rules:
-    - changes:
-      - /icon.{png, import}
-      - /project.godot
-      - /export_presets.cfg
-      - /common/*
-      - /client/*
 
 .server-template: &server-template
   stage: export
   artifacts:
     name: $SV_EXPORT_NAME-$CI_JOB_NAME
-  rules:
-    - changes:
-      - /icon.{png, import}
-      - /project.godot
-      - /export_presets.cfg
-      - /common/*
-      - /server/*
 
 .linux: &linux
   artifacts:
