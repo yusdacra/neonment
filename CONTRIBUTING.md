@@ -15,7 +15,7 @@ Merge Request here.
 
 Make sure that:
 - Your code uses:
-    - Tabs.
+    - Tabs for indentation.
     - Static typing.
 - The project builds fine with both debug and release templates.
 - The change is tested, and does not create a regression in related parts of the
