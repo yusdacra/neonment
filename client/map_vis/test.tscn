@@ -2,7 +2,9 @@
 
 [ext_resource path="res://client/asset/material/white.tres" type="Material" id=1]
 [ext_resource path="res://client/asset/material/black.tres" type="Material" id=2]
-[ext_resource path="res://client/map_vis/env.tres" type="Environment" id=3]
+[ext_resource path="res://client/asset/def_env.tres" type="Environment" id=3]
+
+
 
 
 

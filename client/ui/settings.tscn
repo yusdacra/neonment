@@ -28,15 +28,23 @@ margin_right = 1180.0
 margin_bottom = 650.0
 
 [node name="v" type="VBoxContainer" parent="m/h"]
-margin_right = 26.0
+margin_right = 196.0
 margin_bottom = 580.0
 size_flags_vertical = 3
 
-[node name="l" type="Label" parent="m/h/v"]
-margin_right = 26.0
-margin_bottom = 14.0
-text = "WIP "
-uppercase = true
+[node name="sens_label" type="Label" parent="m/h/v"]
+margin_right = 196.0
+margin_bottom = 31.0
+text = "                                                 
+Mouse Sensitivity              "
+
+[node name="sens_slider" type="HSlider" parent="m/h/v"]
+margin_top = 35.0
+margin_right = 196.0
+margin_bottom = 51.0
+min_value = 10.0
+max_value = 100.0
+value = 10.0
 
 [node name="back" type="Button" parent="."]
 anchor_top = 1.0
@@ -47,4 +55,5 @@ text = "<-- Go Back"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="value_changed" from="m/h/v/sens_slider" to="." method="_on_sens_slider_value_changed"]
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]

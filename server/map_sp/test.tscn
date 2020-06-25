@@ -2,6 +2,11 @@
 
 [node name="spawn_points" type="Spatial"]
 
+[node name="t1" type="Spatial" parent="."]
+
+[node name="0" type="Position3D" parent="t1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.17576, 3.66374, 2.98815 )
+
 [node name="t2" type="Spatial" parent="."]
 
 [node name="1" type="Position3D" parent="t2"]

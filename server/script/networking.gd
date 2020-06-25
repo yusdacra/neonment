@@ -7,8 +7,6 @@ signal player_left(id)
 signal input_received(idata, id)
 signal ready_received(ready, id)
 
-#---------------------------#
-
 func _ready() -> void:
 	get_tree().connect("network_peer_connected", self, "client_connected")
 	get_tree().connect("network_peer_disconnected", self, "client_disconnected")
@@ -20,8 +18,13 @@ func _ready() -> void:
 		state.server_info.name = config.name
 		state.server_info.max_clients = config.max_clients
 		state.server_info.game.map = config.map
+		state.config = config
 	elif config is bool && config:
-		pass
+		state.write_conf(state.config)
+		port = state.config.port
+		state.server_info.name = state.config.name
+		state.server_info.max_clients = state.config.max_clients
+		state.server_info.game.map = state.config.map
 	else:
 		state.perr("Could not parse config")
 		get_tree().quit(1)
@@ -37,8 +40,6 @@ func _ready() -> void:
 	create_server()
 	state.change_map_to("lobby", false)
 
-#---------------------------#
-
 func client_connected(id) -> void:
 	state.pdbg("Client " + str(id) + " connected to server")
 	rpc_id(id, "sv_info", state.server_info)
@@ -46,8 +47,6 @@ func client_connected(id) -> void:
 func client_disconnected(id) -> void:
 	state.pdbg("Client " + str(id) + " disconnected from server")
 	unregister_player(id)
-
-#---------------------------#
 
 func create_server() -> void:
 	state.plog("Starting server with configuration:")
@@ -92,8 +91,6 @@ func send_change_map(map_name: String, game_map: bool = true) -> void:
 func send_rdict(rdict: Dictionary) -> void:
 	rpc("receive_ready_dict", rdict)
 
-#---------------------------#
-
 remote func register_player(pinfo: Dictionary) -> void:
 	# Check if the server is "full"
 	if state.players.size() >= state.server_info.game.max_players:
@@ -121,5 +118,3 @@ remote func receive_input(idata: Dictionary, pid: int) -> void:
 
 remote func receive_ready(ready: bool, pid: int) -> void:
 	emit_signal("ready_received", ready, pid)
-
-#---------------------------#

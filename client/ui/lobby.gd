@@ -11,8 +11,12 @@ func _ready() -> void:
 	_on_ready_toggled(false)
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		_on_back_pressed()
+	if last_check_frame <= 0:
+		if event.is_action_pressed("ui_cancel"):
+			_on_back_pressed()
+		elif event.is_action_pressed("ui_accept"):
+			var ready: Button = get_node("ready")
+			ready.set_pressed(!ready.is_pressed())
 
 func _on_back_pressed() -> void:
 	get_tree().emit_signal("server_disconnected", "Disconnect requested.")

@@ -21,7 +21,7 @@ before_script:
     name: $CL_EXPORT_NAME-$CI_JOB_NAME
   rules:
     - changes:
-      - "{client,common}/**/*.{gd,tscn}"
+      - "{client,common}/**/*.{gd,tscn,tres}"
       - ".gitlab-ci.yml"
       - "export_presets.cfg"
       - "project.godot"
@@ -33,7 +33,7 @@ before_script:
     name: $SV_EXPORT_NAME-$CI_JOB_NAME
   rules:
     - changes:
-      - "{server,common}/**/*.{gd,tscn}"
+      - "{server,common}/**/*.{gd,tscn,tres}"
       - ".gitlab-ci.yml"
       - "export_presets.cfg"
       - "project.godot"

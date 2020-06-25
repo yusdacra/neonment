@@ -3,11 +3,16 @@ extends Node
 var current_map_name: String = "node_that_will_never_exist_in_the_scene_hierarchy"
 # Stores the "feature" of the game, ie. server or client
 var feature: String
-
-#---------------------------#
+var config: Dictionary = {
+	mouse_sens = 0.2,
+} if feature == "client" else {
+	port = 5000,
+	name = "Server",
+	max_clients = 6,
+	map = "test",
+}
 
 var players: Dictionary = {}
-# This only contains information we need to send to a client
 var server_info: Dictionary = {
 	name = "Server",
 	max_clients = 6,
@@ -21,15 +26,14 @@ var server_info: Dictionary = {
 # After how many seconds a game will start
 const GAME_START_COOLDOWN: float = 10.0
 
-#---------------------------#
-
 var counter: float = 0.0
 var frame: int = 0
 const UDELTA: float = 1.0 / 60
-
 var paused: bool = false
 
-# This is used so that the game is more deterministic, and is controlled from a single source
+# This is used so that the game is more deterministic
+# and is controlled from a single source
+# (so we can "pause" the game easily)
 signal new_frame
 
 func _process(delta: float) -> void:
@@ -38,8 +42,11 @@ func _process(delta: float) -> void:
 	counter += delta
 	if counter < UDELTA:
 		return
-	counter -= UDELTA
-	frame += 1
+	# This skips frames if the computer can't keep up
+	# or when framerate is limited to some amount (VSync)
+	while counter >= UDELTA:
+		counter -= UDELTA
+		frame += 1
 	emit_signal("new_frame")
 
 # Checks if the time that passed between start_frame and current frame is bigger than given max_time
@@ -48,8 +55,6 @@ func did_pass(start_frame: int, max_time: float) -> bool:
 
 func toggle_pause() -> void:
 	paused = !paused
-
-#---------------------------#
 
 func change_map_to(name: String, is_game_map: bool = true) -> void:
 	pdbg("Map before change: " + current_map_name)
@@ -100,11 +105,9 @@ func parse_time(time: int) -> String:
 		t = "00"
 	return t
 
-# Config file stuff
-
 func read_conf():
 	var file := File.new()
-	var open_err = file.open("user://" + feature + "_config.json", File.READ)
+	var open_err := file.open("user://" + feature + "_config.json", File.READ)
 	if open_err == ERR_FILE_NOT_FOUND:
 		return true
 	elif open_err != OK:
@@ -116,4 +119,13 @@ func read_conf():
 		return false
 	return parse_json(content)
 
-#---------------------------#
+func write_conf(conf: Dictionary) -> bool:
+	var file := File.new()
+	var open_err := file.open("user://" + feature + "_config.json", File.WRITE)
+	if open_err != OK:
+		return false
+	
+	var content: String = to_json(conf)
+	file.store_string(content)
+	file.close()
+	return true

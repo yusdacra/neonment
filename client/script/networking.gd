@@ -17,16 +17,23 @@ signal player_left(id)
 signal received_snapshot(ss)
 signal received_rdict(rdict)
 
-#---------------------------#
-
 func _ready() -> void:
 	get_tree().connect("connected_to_server", self, "on_connect")
 	get_tree().connect("server_disconnected", self, "on_disconnect")
 	get_tree().connect("connection_failed", self, "on_connection_fail")
 	
+	# Read the config from config file, check if it is correct
+	var config = state.read_conf()
+	if config is Dictionary && config.mouse_sens:
+		state.config = config
+	elif config is bool && config:
+		state.write_conf(state.config)
+	else:
+		state.perr("Could not parse config")
+		get_tree().quit(1)
+		return
+	
 	state.change_map_to("main_menu", false)
-
-#---------------------------#
 
 func on_connect() -> void:
 	player.id = get_tree().get_network_unique_id()
@@ -42,8 +49,6 @@ func on_disconnect(reason: String = "Unknown reason.") -> void:
 	state.players.clear()
 	state.plog("Disconnected from the server: " + reason)
 	emit_signal("disconnected", reason)
-
-#---------------------------#
 
 func connect_to_server(ip: String, port: int) -> void:
 	var client = NetworkedMultiplayerENet.new()
@@ -66,8 +71,6 @@ func send_input_data(idata: Dictionary) -> void:
 
 func send_ready(ready: bool) -> void:
 	rpc_id(1, "receive_ready", ready, player.id)
-
-#---------------------------#
 
 remote func register_player(pinfo: Dictionary) -> void:
 	state.players[pinfo.id] = pinfo
@@ -102,5 +105,3 @@ remote func sv_already_has() -> void:
 
 remote func sv_full() -> void:
 	get_tree().emit_signal("connection_failed", "Server is full.")
-
-#---------------------------#
