@@ -22,17 +22,6 @@ func _ready() -> void:
 	get_tree().connect("server_disconnected", self, "on_disconnect")
 	get_tree().connect("connection_failed", self, "on_connection_fail")
 	
-	# Read the config from config file, check if it is correct
-	var config = state.read_conf()
-	if config is Dictionary && config.mouse_sens:
-		state.config = config
-	elif config is bool && config:
-		state.write_conf(state.config)
-	else:
-		state.perr("Could not parse config")
-		get_tree().quit(1)
-		return
-	
 	state.change_map_to("main_menu", false)
 
 func on_connect() -> void:

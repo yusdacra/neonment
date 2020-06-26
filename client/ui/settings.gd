@@ -10,7 +10,7 @@ func _input(event: InputEvent) -> void:
 		_on_back_pressed()
 
 func _on_back_pressed() -> void:
-	state.write_conf(state.config)
+	state.write_conf()
 	state.change_map_to("main_menu", false)
 
 func _on_sens_slider_value_changed(value: int):

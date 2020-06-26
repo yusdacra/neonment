@@ -43,7 +43,6 @@ margin_top = 35.0
 margin_right = 196.0
 margin_bottom = 51.0
 min_value = 10.0
-max_value = 100.0
 value = 10.0
 
 [node name="back" type="Button" parent="."]

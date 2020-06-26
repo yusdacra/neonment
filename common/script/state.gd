@@ -11,6 +11,7 @@ var config: Dictionary = {
 	max_clients = 6,
 	map = "test",
 }
+var config_path: String
 
 var players: Dictionary = {}
 var server_info: Dictionary = {
@@ -105,27 +106,39 @@ func parse_time(time: int) -> String:
 		t = "00"
 	return t
 
-func read_conf():
+func read_conf() -> void:
 	var file := File.new()
-	var open_err := file.open("user://" + feature + "_config.json", File.READ)
-	if open_err == ERR_FILE_NOT_FOUND:
-		return true
-	elif open_err != OK:
-		return false
-	
+	plog("Loading config file from " + config_path + ".")
+	var open_err := file.open(config_path, File.READ)
+	if open_err != OK:
+		perr("Could not read config file from! Using default settings.")
+		return
 	var content: String = file.get_as_text()
 	file.close()
-	if validate_json(content):
-		return false
-	return parse_json(content)
-
-func write_conf(conf: Dictionary) -> bool:
-	var file := File.new()
-	var open_err := file.open("user://" + feature + "_config.json", File.WRITE)
-	if open_err != OK:
-		return false
 	
-	var content: String = to_json(conf)
+	if validate_json(content):
+		perr("Could not parse config file! Using default settings.")
+		return
+	var parsed = parse_json(content)
+	if feature == "client":
+		if parsed.mouse_sens:
+			config.mouse_sens = parsed.mouse_sens
+	else:
+		if parsed.port:
+			config.port = parsed.port
+		if parsed.name:
+			config.name = parsed.name
+		if parsed.max_clients:
+			config.max_clients = parsed.max_clients
+		if parsed.map:
+			config.map = parsed.map
+
+func write_conf() -> void:
+	var file := File.new()
+	var open_err := file.open(config_path, File.WRITE)
+	if open_err != OK:
+		perr("Could not write config file!")
+		return
+	var content: String = to_json(config)
 	file.store_string(content)
 	file.close()
-	return true

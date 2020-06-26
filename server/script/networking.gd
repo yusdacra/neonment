@@ -11,25 +11,11 @@ func _ready() -> void:
 	get_tree().connect("network_peer_connected", self, "client_connected")
 	get_tree().connect("network_peer_disconnected", self, "client_disconnected")
 	
-	# Read the config from config file, check if it is correct
-	var config = state.read_conf()
-	if config is Dictionary && config.port && config.name && config.max_clients && config.map:
-		port = config.port
-		state.server_info.name = config.name
-		state.server_info.max_clients = config.max_clients
-		state.server_info.game.map = config.map
-		state.config = config
-	elif config is bool && config:
-		state.write_conf(state.config)
-		port = state.config.port
-		state.server_info.name = state.config.name
-		state.server_info.max_clients = state.config.max_clients
-		state.server_info.game.map = state.config.map
-	else:
-		state.perr("Could not parse config")
-		get_tree().quit(1)
-		return
-	
+	port = state.config.port
+	state.server_info.name = state.config.name
+	state.server_info.max_clients = state.config.max_clients
+	state.server_info.game.map = state.config.map
+
 	# Extract map info that client needs
 	var sp = load("res://server/map_sp/" + state.server_info.game.map + ".tscn").instance()
 	state.server_info.game.team_count = sp.get_child_count()

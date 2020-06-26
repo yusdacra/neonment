@@ -119,4 +119,3 @@ name_casing=2
 threads/thread_model=2
 environment/default_clear_color=Color( 0, 0, 0, 1 )
 quality/filters/msaa=4
-environment/default_environment="res://client/asset/def_env.tres"
