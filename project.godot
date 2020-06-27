@@ -43,6 +43,10 @@ window/size/height=720
 window/size/resizable=false
 window/vsync/use_vsync=false
 
+[editor]
+
+search_in_file_extensions=PoolStringArray( "gd", "shader", "json" )
+
 [input]
 
 move_forward={

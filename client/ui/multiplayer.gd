@@ -6,11 +6,10 @@ func _ready() -> void:
 	networking.connect("registered_by_sv", self, "go_to_lobby")
 	networking.connect("connection_fail", self, "_on_connection_error")
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	get_node("menu/column/direct/center/row/player_row/player_name").set_text(networking.player.name)
 
 func _on_join_pressed() -> void:
-	if !update_player_info():
-		state.perr("Invalid player information.")
-		return
+	networking.player.name = get_node("menu/column/direct/center/row/player_row/player_name").text
 	
 	var ip: String = get_node("menu/column/direct/center/row/join_row/ip").text
 	var port: int = int(get_node("menu/column/direct/center/row/join_row/port").text)
@@ -23,12 +22,6 @@ func go_to_lobby() -> void:
 func _on_connection_error(reason: String):
 	# TODO: Show a popup when connection fails
 	pass
-
-func update_player_info() -> bool:
-	networking.player.name = get_node("menu/column/direct/center/row/player_row/player_name").text
-	if networking.player.name.empty():
-		return false
-	return true
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):

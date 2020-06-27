@@ -1,6 +1,6 @@
 extends Node
 
-var port: int = 5000
+var port: int = state.config.port
 
 signal player_joined(pinfo)
 signal player_left(id)
@@ -11,14 +11,14 @@ func _ready() -> void:
 	get_tree().connect("network_peer_connected", self, "client_connected")
 	get_tree().connect("network_peer_disconnected", self, "client_disconnected")
 	
-	port = state.config.port
 	state.server_info.name = state.config.name
 	state.server_info.max_clients = state.config.max_clients
-	state.server_info.game.map = state.config.map
+	state.server_info.game = state.config.game
 
 	# Extract map info that client needs
 	var sp = load("res://server/map_sp/" + state.server_info.game.map + ".tscn").instance()
 	state.server_info.game.team_count = sp.get_child_count()
+	state.server_info.game.max_players = 0
 	for sps in sp.get_children():
 		state.server_info.game.max_players += sps.get_child_count()
 	sp.free()
@@ -80,13 +80,17 @@ func send_rdict(rdict: Dictionary) -> void:
 remote func register_player(pinfo: Dictionary) -> void:
 	# Check if the server is "full"
 	if state.players.size() >= state.server_info.game.max_players:
-		rpc_id(pinfo.id, "sv_full")
+		rpc_id(pinfo.id, "sv_wont_register", "Server is full.")
 		return
 	for player in state.players.values():
 		# Check if a player with the same name exists
 		if player.name == pinfo.name:
 			# If so, notify connected player and stop registering
-			rpc_id(pinfo.id, "sv_already_has")
+			rpc_id(pinfo.id, "sv_wont_register", "Server already has a player with the same name.")
+			return
+		# TODO: Make servers be able to specify a regex for invalid names
+		elif player.name.empty():
+			rpc_id(pinfo.id, "sv_wont_register", "Server does not allow your name.")
 			return
 	for player in state.players.values():
 		# Call the clients to add this new player to their lists

@@ -1,0 +1,9 @@
+{
+  "name": "Server",
+  "max_clients": 6,
+  "port": 5000,
+  "game": {
+    "map": "test",
+	"start_max_time": 10.0,
+  }
+}

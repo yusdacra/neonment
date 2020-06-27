@@ -30,7 +30,7 @@ func _on_ready_toggled(button_pressed: bool) -> void:
 
 func update_loop() -> void:
 	if last_check_frame > 0:
-		get_node("m/h/v/timer").set_text("Players - All ready! - Starting in " + str(10 - int((state.frame - last_check_frame) * state.UDELTA)))
+		get_node("m/h/v/timer").set_text("Players - All ready! - Starting in " + str(state.server_info.game.start_max_time - int((state.frame - last_check_frame) * state.UDELTA)))
 
 func update_ui(rdict: Dictionary) -> void:
 	get_node("m/h/v/plist").clear()
@@ -50,7 +50,7 @@ func update_ui(rdict: Dictionary) -> void:
 			last_check_frame = state.frame
 			get_node("ready").set_disabled(true)
 			get_node("back").set_disabled(true)
-			get_node("m/h/v/timer").set_text("Players - All ready! - Starting in " + str(state.GAME_START_COOLDOWN))
+			get_node("m/h/v/timer").set_text("Players - All ready! - Starting in " + str(state.server_info.game.start_max_time))
 			return
 		else:
 			get_node("m/h/v/timer").set_text("Players - Everyone isn't ready yet!")

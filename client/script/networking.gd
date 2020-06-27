@@ -2,7 +2,7 @@ extends Node
 
 var player: Dictionary = {
 	id = 1,
-	name = "Player",
+	name = state.config.nickname,
 	classname = "test_player",
 }
 
@@ -89,8 +89,5 @@ remote func receive_change_map(map_name: String, game_map: bool) -> void:
 remote func sv_register() -> void:
 	emit_signal("registered_by_sv")
 
-remote func sv_already_has() -> void:
-	get_tree().emit_signal("connection_failed", "Server already has a client with the same name.")
-
-remote func sv_full() -> void:
-	get_tree().emit_signal("connection_failed", "Server is full.")
+remote func sv_wont_register(reason: String) -> void:
+	get_tree().emit_signal("connection_failed", reason)

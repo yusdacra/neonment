@@ -45,6 +45,18 @@ margin_bottom = 51.0
 min_value = 10.0
 value = 10.0
 
+[node name="label" type="Label" parent="m/h/v"]
+margin_top = 55.0
+margin_right = 196.0
+margin_bottom = 69.0
+text = "Player Nickname"
+
+[node name="nickname_ledit" type="LineEdit" parent="m/h/v"]
+margin_top = 73.0
+margin_right = 196.0
+margin_bottom = 97.0
+placeholder_text = "Reallycoolnickname"
+
 [node name="back" type="Button" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -55,4 +67,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="value_changed" from="m/h/v/sens_slider" to="." method="_on_sens_slider_value_changed"]
+[connection signal="text_changed" from="m/h/v/nickname_ledit" to="." method="_on_nickname_ledit_text_changed"]
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]

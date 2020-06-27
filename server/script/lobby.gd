@@ -15,7 +15,7 @@ func _ready() -> void:
 		ready_list[p] = false
 
 func update() -> void:
-	if last_check_frame > 0 && state.did_pass(last_check_frame, state.GAME_START_COOLDOWN):
+	if last_check_frame > 0 && state.did_pass(last_check_frame, state.server_info.game.start_max_time):
 		state.change_map_to(state.server_info.game.map)
 
 func toggle_ready(ready: bool, id: int) -> void:

@@ -3,15 +3,9 @@ extends Node
 var current_map_name: String = "node_that_will_never_exist_in_the_scene_hierarchy"
 # Stores the "feature" of the game, ie. server or client
 var feature: String
-var config: Dictionary = {
-	mouse_sens = 0.2,
-} if feature == "client" else {
-	port = 5000,
-	name = "Server",
-	max_clients = 6,
-	map = "test",
-}
+var config: Dictionary
 var config_path: String
+var def_config_path: String
 
 var players: Dictionary = {}
 var server_info: Dictionary = {
@@ -21,11 +15,9 @@ var server_info: Dictionary = {
 		team_count = 0,
 		max_players = 0,
 		map = "test",
+		start_max_time = 10.0,
 	},
 }
-
-# After how many seconds a game will start
-const GAME_START_COOLDOWN: float = 10.0
 
 var counter: float = 0.0
 var frame: int = 0
@@ -111,27 +103,35 @@ func read_conf() -> void:
 	plog("Loading config file from " + config_path + ".")
 	var open_err := file.open(config_path, File.READ)
 	if open_err != OK:
-		perr("Could not read config file from! Using default settings.")
+		perr("Could not read config file! Using default settings.")
+		read_def_conf()
 		return
 	var content: String = file.get_as_text()
 	file.close()
 	
 	if validate_json(content):
 		perr("Could not parse config file! Using default settings.")
+		read_def_conf()
 		return
+	
 	var parsed = parse_json(content)
 	if feature == "client":
-		if parsed.mouse_sens:
+		if parsed.has("nickname"):
+			config.nickname = parsed.nickname
+		if parsed.has("mouse_sens"):
 			config.mouse_sens = parsed.mouse_sens
 	else:
-		if parsed.port:
+		if parsed.has("port"):
 			config.port = parsed.port
-		if parsed.name:
+		if parsed.has("name"):
 			config.name = parsed.name
-		if parsed.max_clients:
+		if parsed.has("max_clients"):
 			config.max_clients = parsed.max_clients
-		if parsed.map:
-			config.map = parsed.map
+		if parsed.has("game"):
+			if parsed.game.has("map"):
+				config.game.map = parsed.game.map
+			if parsed.game.has("start_max_time"):
+				config.game.start_max_time = parsed.game.start_max_time
 
 func write_conf() -> void:
 	var file := File.new()
@@ -141,4 +141,10 @@ func write_conf() -> void:
 		return
 	var content: String = to_json(config)
 	file.store_string(content)
+	file.close()
+
+func read_def_conf() -> void:
+	var file := File.new()
+	file.open(def_config_path, File.READ)
+	config = parse_json(file.get_as_text())
 	file.close()
