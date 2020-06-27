@@ -88,10 +88,10 @@ remote func register_player(pinfo: Dictionary) -> void:
 			# If so, notify connected player and stop registering
 			rpc_id(pinfo.id, "sv_wont_register", "Server already has a player with the same name.")
 			return
-		# TODO: Make servers be able to specify a regex for invalid names
-		elif player.name.empty():
-			rpc_id(pinfo.id, "sv_wont_register", "Server does not allow your name.")
-			return
+	# TODO: Make servers be able to specify a regex for invalid names
+	if pinfo.name.empty():
+		rpc_id(pinfo.id, "sv_wont_register", "Server does not allow your name.")
+		return
 	for player in state.players.values():
 		# Call the clients to add this new player to their lists
 		rpc_id(player.id, "register_player", pinfo)
