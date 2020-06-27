@@ -2,18 +2,22 @@ extends Control
 
 onready var networking: Node = get_node("/root/root")
 onready var fail_dialog: AcceptDialog = get_node("fail_dialog")
+onready var first_row: BoxContainer = get_node("m/c/r/c/r")
+onready var pname_ledit: LineEdit = first_row.get_node("player_row/pname_ledit")
+onready var ip_ledit: LineEdit = first_row.get_node("join_row/ip_ledit")
+onready var port_ledit: LineEdit = first_row.get_node("join_row/port_ledit")
 
 func _ready() -> void:
 	networking.connect("registered_by_sv", self, "go_to_lobby")
 	networking.connect("connection_fail", self, "connection_error")
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	get_node("menu/column/direct/center/row/player_row/player_name").set_text(networking.player.name)
+	pname_ledit.set_text(networking.player.name)
 
 func _on_join_pressed() -> void:
-	networking.player.name = get_node("menu/column/direct/center/row/player_row/player_name").text
+	networking.player.name = pname_ledit.get_text()
 	
-	var ip: String = get_node("menu/column/direct/center/row/join_row/ip").text
-	var port: int = int(get_node("menu/column/direct/center/row/join_row/port").text)
+	var ip: String = ip_ledit.get_text()
+	var port: int = int(port_ledit.get_text())
 	
 	networking.connect_to_server(ip, port)
 

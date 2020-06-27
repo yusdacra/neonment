@@ -10,7 +10,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="menu" type="MarginContainer" parent="."]
+[node name="m" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/margin_right = 100
@@ -21,7 +21,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="column" type="HBoxContainer" parent="menu"]
+[node name="c" type="HBoxContainer" parent="m"]
 margin_left = 100.0
 margin_top = 70.0
 margin_right = 1180.0
@@ -30,42 +30,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="direct" type="VBoxContainer" parent="menu/column"]
+[node name="r" type="VBoxContainer" parent="m/c"]
 margin_right = 83.0
 margin_bottom = 580.0
 rect_min_size = Vector2( 0, 460 )
 
-[node name="center" type="CenterContainer" parent="menu/column/direct"]
+[node name="c" type="CenterContainer" parent="m/c/r"]
 margin_right = 83.0
 margin_bottom = 580.0
 size_flags_vertical = 3
 
-[node name="row" type="VBoxContainer" parent="menu/column/direct/center"]
+[node name="r" type="VBoxContainer" parent="m/c/r/c"]
 margin_top = 211.0
 margin_right = 83.0
 margin_bottom = 369.0
 
-[node name="player_row" type="VBoxContainer" parent="menu/column/direct/center/row"]
+[node name="player_row" type="VBoxContainer" parent="m/c/r/c/r"]
 margin_right = 83.0
 margin_bottom = 42.0
 
-[node name="label" type="Label" parent="menu/column/direct/center/row/player_row"]
+[node name="label" type="Label" parent="m/c/r/c/r/player_row"]
 margin_right = 83.0
 margin_bottom = 14.0
 text = "Player name:"
 
-[node name="player_name" type="LineEdit" parent="menu/column/direct/center/row/player_row"]
+[node name="pname_ledit" type="LineEdit" parent="m/c/r/c/r/player_row"]
 margin_top = 18.0
 margin_right = 83.0
 margin_bottom = 42.0
 text = "Player"
 
-[node name="join_row" type="VBoxContainer" parent="menu/column/direct/center/row"]
+[node name="join_row" type="VBoxContainer" parent="m/c/r/c/r"]
 margin_top = 46.0
 margin_right = 83.0
 margin_bottom = 158.0
 
-[node name="label" type="Label" parent="menu/column/direct/center/row/join_row"]
+[node name="label" type="Label" parent="m/c/r/c/r/join_row"]
 margin_right = 83.0
 margin_bottom = 14.0
 text = "IP:"
@@ -73,7 +73,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ip" type="LineEdit" parent="menu/column/direct/center/row/join_row"]
+[node name="ip_ledit" type="LineEdit" parent="m/c/r/c/r/join_row"]
 margin_top = 18.0
 margin_right = 83.0
 margin_bottom = 42.0
@@ -82,7 +82,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="label2" type="Label" parent="menu/column/direct/center/row/join_row"]
+[node name="label2" type="Label" parent="m/c/r/c/r/join_row"]
 margin_top = 46.0
 margin_right = 83.0
 margin_bottom = 60.0
@@ -91,7 +91,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="port" type="LineEdit" parent="menu/column/direct/center/row/join_row"]
+[node name="port_ledit" type="LineEdit" parent="m/c/r/c/r/join_row"]
 margin_top = 64.0
 margin_right = 83.0
 margin_bottom = 88.0
@@ -100,13 +100,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="join" type="Button" parent="menu/column/direct/center/row/join_row"]
+[node name="join" type="Button" parent="m/c/r/c/r/join_row"]
 margin_top = 92.0
 margin_right = 83.0
 margin_bottom = 112.0
 text = "Join Server"
 
-[node name="server_list" type="VBoxContainer" parent="menu/column"]
+[node name="server_list" type="VBoxContainer" parent="m/c"]
 margin_left = 87.0
 margin_right = 87.0
 margin_bottom = 580.0
@@ -135,5 +135,5 @@ dialog_autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="menu/column/direct/center/row/join_row/join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="m/c/r/c/r/join_row/join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="back" to="." method="_on_back_pressed"]

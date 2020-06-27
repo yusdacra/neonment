@@ -1,11 +1,8 @@
 extends Control
 
-export var pl_path: NodePath
-onready var player_list: ItemList = get_node(pl_path)
-export var pr_path: NodePath
-onready var player_row: BoxContainer = get_node(pr_path)
-export var pn_path: NodePath
-onready var player_name: Label = get_node(pn_path)
+onready var player_row: BoxContainer = get_node("c/player_row")
+onready var player_list: ItemList = player_row.get_node("player_list")
+onready var player_name: Label = player_row.get_node("player_name")
 
 onready var networking: Node = get_node("/root/root")
 var beforeb: bool = false

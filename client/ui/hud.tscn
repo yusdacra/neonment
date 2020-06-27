@@ -9,27 +9,24 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-pl_path = NodePath("center/player_row/player_list")
-pr_path = NodePath("center/player_row")
-pn_path = NodePath("center/player_row/player_name")
 
-[node name="center" type="CenterContainer" parent="."]
+[node name="c" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="player_row" type="VBoxContainer" parent="center"]
-margin_left = 412.0
-margin_top = 286.0
-margin_right = 612.0
-margin_bottom = 313.0
+[node name="player_row" type="VBoxContainer" parent="c"]
+margin_left = 540.0
+margin_top = 346.0
+margin_right = 740.0
+margin_bottom = 373.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="player_name" type="Label" parent="center/player_row"]
+[node name="player_name" type="Label" parent="c/player_row"]
 margin_right = 200.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 200, 0 )
@@ -39,7 +36,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "LocalPlayerName"
 align = 1
 
-[node name="player_list" type="ItemList" parent="center/player_row"]
+[node name="player_list" type="ItemList" parent="c/player_row"]
 margin_top = 18.0
 margin_right = 200.0
 margin_bottom = 27.0
