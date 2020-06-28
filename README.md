@@ -6,7 +6,11 @@ A first person hero shooter that features lots of neon lights. The name may chan
 
 ## Running
 - For client:
-    - Get a debug build from the latest pipeline artifacts.
+    - Get a debug build from the latest pipeline artifacts, and uncompress it.
+        - [Linux](https://gitlab.com/yusdacra/neonment/-/jobs/artifacts/master/download?job=linux-client)
+            - You need to run `chmod +x NeonmentClient.x86_64` to make the game executable.
+        - [Windows](https://gitlab.com/yusdacra/neonment/-/jobs/artifacts/master/download?job=windows-client)
+        - [Mac OS](https://gitlab.com/yusdacra/neonment/-/jobs/artifacts/master/download?job=mac-client)
     - Or:
         - Get [Godot](https://godotengine.org/download)
         - Clone the project (Or download a specific commit / tag)
