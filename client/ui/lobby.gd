@@ -20,18 +20,17 @@ func _input(event: InputEvent) -> void:
 		if !ready.is_pressed() && event.is_action_pressed("ui_cancel"):
 			_on_back_pressed()
 		elif event.is_action_pressed("ui_accept"):
-			var ready: Button = get_node("ready")
 			ready.set_pressed(!ready.is_pressed())
 
 func _on_back_pressed() -> void:
 	get_tree().emit_signal("server_disconnected", "Disconnect requested.")
 
-func on_disconnect(reason: String) -> void:
-	state.change_map_to("multiplayer", false)
-
 func _on_ready_toggled(button_pressed: bool) -> void:
 	back.set_disabled(button_pressed)
 	networking.send_ready(button_pressed)
+
+func on_disconnect(reason: String) -> void:
+	state.change_map_to("multiplayer", false)
 
 func update_loop() -> void:
 	if last_check_frame > 0:
@@ -39,7 +38,7 @@ func update_loop() -> void:
 
 func update_ui(rdict: Dictionary) -> void:
 	plist.clear()
-	var all_true: bool = true
+	var all_true := true
 	for p in rdict:
 		var text: String = networking.player.name
 		if p != networking.player.id:

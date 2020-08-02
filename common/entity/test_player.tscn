@@ -23,9 +23,9 @@ walk_speed = 15.0
 sprint_speed = 24.0
 jump_height = 13.0
 
-[node name="ability" type="Node" parent="."]
+[node name="abilities" type="Node" parent="."]
 
-[node name="dash" type="Node" parent="ability"]
+[node name="dash" type="Node" parent="abilities"]
 script = ExtResource( 3 )
 duration = 0.5
 ability_name = "dash"

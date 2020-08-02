@@ -11,8 +11,8 @@ func _ready() -> void:
 	networking.connect("player_joined", self, "add_ready")
 	networking.connect("player_left", self, "remove_ready")
 	
-	for p in state.players:
-		ready_list[p] = false
+	for pid in state.players:
+		ready_list[pid] = false
 
 func update() -> void:
 	if last_check_frame > 0 && state.did_pass(last_check_frame, state.server_info.game.start_max_time):

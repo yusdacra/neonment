@@ -97,6 +97,8 @@ func spawn_player(pinfo: Dictionary, spawn_point: Vector3 = Vector3(0, 20, 0)) -
 	add_child(new_player)
 
 func apply_snapshot(ss: Dictionary) -> void:
+	# If this snapshots timestamp is older than the previous one's then
+	# don't apply it
 	if ss.timestamp <= last_ss_timestamp:
 		return
 	last_ss_timestamp = ss.timestamp
@@ -132,9 +134,10 @@ func gather_input() -> Dictionary:
 		backward = Input.is_action_pressed("move_backward"),
 		left = Input.is_action_pressed("move_left"),
 		right = Input.is_action_pressed("move_right"),
-		jump = Input.is_action_just_pressed("move_jump"), # NOTE: don't make this "is_action_pressed" it breaks double jumping
+		# NOTE: don't make this "is_action_pressed" it breaks double jumping
+		jump = Input.is_action_just_pressed("move_jump"),
 		sprint = Input.is_action_pressed("move_sprint"),
-		mouse_axis = mouse_axis,
+		mouse_axis = self.mouse_axis,
 		ability = [
 			Input.is_action_just_pressed("ability_0"),
 			Input.is_action_just_pressed("ability_1"),

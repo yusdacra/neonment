@@ -4,7 +4,7 @@ extends Node
 # An ability must implement:
 # _init(properties: Dictionary, player: KinematicBody) # executed once when the ability is created
 # execute() # executed once when the ability is triggered
-# loop() # executed each frame (not including the start frame of the ability)
+# loop() # executed each frame (not including the trigger frame of the ability)
 # end() # executed once when the ability duration wears off
 
 export var duration: float = 1.0

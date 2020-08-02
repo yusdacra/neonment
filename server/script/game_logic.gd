@@ -2,7 +2,8 @@ extends Spatial
 
 var ss_timestamp: int = 1 # Last sent snapshot's timestamp
 var inputs: Dictionary = {} # Holds received inputs (that haven't been processed yet)
-var pi_input_timestamp: Dictionary = {} # Caches last processed inputs' timestamp sent by clients, so we can send it back
+var pi_input_timestamp: Dictionary = {} # Caches last processed inputs' timestamp
+										# sent by clients, so we can send it back
 var player_ginfo: Dictionary = {}
 onready var networking: Node = get_node("/root/root")
 

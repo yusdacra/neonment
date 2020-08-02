@@ -63,7 +63,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -75.0
 margin_top = -30.0
+focus_mode = 0
 toggle_mode = true
+enabled_focus_mode = 0
 text = "Ready"
 __meta__ = {
 "_edit_use_anchors_": false

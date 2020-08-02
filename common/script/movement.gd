@@ -10,7 +10,7 @@ export var max_jump: int = 2
 
 var cur_jump: int = 0
 var velocity := Vector3()
-var locked: bool = false
+var locked := false
 onready var player: KinematicBody = get_parent()
 
 func process_input(input_data: Dictionary):

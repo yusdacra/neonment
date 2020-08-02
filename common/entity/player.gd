@@ -2,11 +2,11 @@ extends KinematicBody
 
 onready var movement: Node = get_node("movement")
 onready var head: Spatial = get_node("head")
-onready var ability: Node = get_node("ability")
+onready var abilities: Node = get_node("abilities")
 
 func process_input(input_data: Dictionary) -> void:
 	movement.process_input(input_data)
-	for a in ability.get_children():
+	for a in abilities.get_children():
 		a.process_input(input_data)
 
 func apply_state(pstate: Dictionary) -> void:
