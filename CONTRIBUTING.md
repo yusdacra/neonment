@@ -16,7 +16,7 @@ Merge Request here.
 It is preferred that each commit changes only one part of the repository, although not necessary
 if the changes are related to each other.
 
-Your commit messages must be organized like this:
+Your commit messages should be organized like this:
 <part(s) of the repository changed (server,client,common)>: <short description of what's changed>
 
 Examples:
@@ -27,15 +27,7 @@ Examples:
 ## Contributing code
 
 Make sure that:
-- Your code uses:
-    - Tabs for indentation.
-    - Static typing.
-        - If the assigned expression does not mention the type of the value:
-            - `var life: int = 0`
-            - `var dialog: AcceptDialog = get_node("example_dialog")`
-        - If the assigned expression does mention the type of the value:
-            - `var velocity := Vector3()`
-    - `get_node()` function instead of the `$` syntax sugar.
+- Your code is formatted using `cargo fmt`.
 - The project builds fine with both debug and release templates.
 - The change is tested, and does not create a regression in related parts of the
 project.
