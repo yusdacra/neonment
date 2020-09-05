@@ -1,2 +1,5 @@
+[profile.release]
+lto = "thin"
+
 [workspace]
 members = [ "client", "server", "common" ]
