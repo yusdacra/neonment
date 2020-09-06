@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use common::{
-    Delivery, NetworkConnectionInfo, NetworkEvent, NetworkManager, NetworkPlugin, NetworkTypes,
+    Delivery, NetworkConnectionInfo, NetworkEvent, NetworkEvents, NetworkPlugin, NetworkTypes,
+    SendEvents,
 };
 
 fn deser(del: Delivery) -> NetworkTypes {
@@ -40,18 +41,27 @@ impl Default for TimerState {
     }
 }
 
-fn send_delivery(time: Res<Time>, mut timer: ResMut<TimerState>, mut net: ResMut<NetworkManager>) {
+fn send_delivery(
+    time: Res<Time>,
+    mut timer: ResMut<TimerState>,
+    mut send_events: ResMut<SendEvents>,
+) {
     timer.timer.tick(time.delta_seconds);
     if timer.timer.finished {
-        net.send_reliable(Delivery::new(&NetworkTypes::Message("test".to_owned())).unwrap());
+        send_events.send(
+            Delivery::new(&NetworkTypes::Message("test".to_owned()))
+                .unwrap()
+                .reliable()
+                .into(),
+        );
         timer.timer.reset();
     }
 }
 
-fn print_network_events(mut netevents: ResMut<Events<NetworkEvent>>) {
+fn print_network_events(mut netevents: ResMut<NetworkEvents>) {
     for ev in netevents.drain() {
         match ev {
-            NetworkEvent::Delivery(del) => println!("{:?}", deser(del)),
+            NetworkEvent::Received(del) => println!("{:?}", deser(del)),
             _ => println!("{:?}", ev),
         }
     }

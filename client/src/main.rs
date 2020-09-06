@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use common::{
-    Delivery, NetworkConnectionInfo, NetworkEvent, NetworkManager, NetworkPlugin, NetworkTypes,
+    Delivery, NetworkConnectionInfo, NetworkEvent, NetworkEvents, NetworkPlugin, NetworkTypes,
+    SendEvents,
 };
 use rand::prelude::*;
 
@@ -25,10 +26,10 @@ fn setup(mut con_info: ResMut<NetworkConnectionInfo>) {
     con_info.client("127.0.0.1:5554", "127.0.0.1:5555").unwrap();
 }
 
-fn print_network_events(mut netevents: ResMut<Events<NetworkEvent>>) {
+fn print_network_events(mut netevents: ResMut<NetworkEvents>) {
     for ev in netevents.drain() {
         match ev {
-            NetworkEvent::Delivery(del) => println!("{:?}", deser(del)),
+            NetworkEvent::Received(del) => println!("{:?}", deser(del)),
             _ => println!("{:?}", ev),
         }
     }
@@ -46,17 +47,22 @@ impl Default for TimerState {
     }
 }
 
-fn send_delivery(time: Res<Time>, mut timer: ResMut<TimerState>, mut net: ResMut<NetworkManager>) {
+fn send_delivery(
+    time: Res<Time>,
+    mut timer: ResMut<TimerState>,
+    mut send_events: ResMut<SendEvents>,
+) {
     timer.timer.tick(time.delta_seconds);
     if timer.timer.finished {
-        net.send_reliable(
+        send_events.send(
             Delivery::new(&NetworkTypes::TestType {
                 pos: Vec2::new(random(), random()),
                 rot: random(),
             })
             .unwrap()
             .compress_if_worth_it()
-            .unwrap(),
+            .unwrap()
+            .into(),
         );
         timer.timer.reset();
     }
@@ -77,11 +83,15 @@ impl Default for UTimerState {
 fn send_undelivery(
     time: Res<Time>,
     mut timer: ResMut<UTimerState>,
-    mut net: ResMut<NetworkManager>,
+    mut send_events: ResMut<SendEvents>,
 ) {
     timer.timer.tick(time.delta_seconds);
     if timer.timer.finished {
-        net.send(Delivery::new(&NetworkTypes::Message("v".to_owned())).unwrap());
+        send_events.send(
+            Delivery::new(&NetworkTypes::Message("v".to_owned()))
+                .unwrap()
+                .into(),
+        );
         timer.timer.reset();
     }
 }
