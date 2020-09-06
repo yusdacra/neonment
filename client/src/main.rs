@@ -60,6 +60,7 @@ fn send_delivery(
                 rot: random(),
             })
             .unwrap()
+            .reliable()
             .compress_if_worth_it()
             .unwrap()
             .into(),
