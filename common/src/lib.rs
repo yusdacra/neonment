@@ -4,11 +4,19 @@ use bevy_prototype_networking_laminar::{
     NetworkEvent as LowLevelNetworkingEvent, NetworkResource, NetworkingPlugin,
 };
 use bytes::Bytes;
+use recv::{poll_low_level_network_events, LowLevelNetworkEventReader};
+use send::{deliver, SendEvent};
 use std::net::SocketAddr;
 
+pub mod error;
+pub mod recv;
+pub mod send;
+
 pub use bincode::deserialize;
+pub use error::NetworkError;
+pub use recv::{NetworkEvent, NetworkEvents};
+pub use send::SendEvents;
 pub use serde::{Deserialize, Serialize};
-pub use std::net::AddrParseError;
 
 use bevy::math::Vec2;
 #[derive(Debug, Serialize, Deserialize)]
@@ -66,13 +74,6 @@ impl NetworkConnectionInfo {
     }
 }
 
-#[derive(Debug)]
-enum DeliveryAddress {
-    To(SocketAddr),
-    From(SocketAddr),
-    Broadcast,
-}
-
 #[derive(Debug, Serialize, Deserialize)]
 struct Payload {
     data: Bytes,
@@ -91,6 +92,13 @@ impl Payload {
 }
 
 #[derive(Debug)]
+enum DeliveryAddress {
+    To(SocketAddr),
+    From(SocketAddr),
+    Broadcast,
+}
+
+#[derive(Debug)]
 pub struct Delivery {
     addr: DeliveryAddress,
     payload: Payload,
@@ -98,7 +106,7 @@ pub struct Delivery {
 
 impl Into<SendEvent> for Delivery {
     fn into(self) -> SendEvent {
-        SendEvent(self)
+        SendEvent::new(self)
     }
 }
 
@@ -169,43 +177,6 @@ impl Delivery {
 }
 
 #[derive(Debug)]
-pub enum NetworkError {
-    Addr(AddrParseError),
-    Parse(bincode::ErrorKind),
-    Compression(std::io::Error),
-    AlreadyCompressed,
-}
-
-impl From<Box<bincode::ErrorKind>> for NetworkError {
-    fn from(other: Box<bincode::ErrorKind>) -> Self {
-        NetworkError::Parse(*other)
-    }
-}
-
-impl From<std::io::Error> for NetworkError {
-    fn from(other: std::io::Error) -> Self {
-        NetworkError::Compression(other)
-    }
-}
-
-impl From<AddrParseError> for NetworkError {
-    fn from(other: AddrParseError) -> Self {
-        NetworkError::Addr(other)
-    }
-}
-
-#[derive(Debug)]
-pub enum NetworkEvent {
-    Received(Delivery),
-    Error(NetworkError),
-    Connection(ConnectionEvent),
-}
-pub type NetworkEvents = Events<NetworkEvent>;
-
-pub struct SendEvent(Delivery);
-pub type SendEvents = Events<SendEvent>;
-
-#[derive(Debug)]
 pub enum ConnectionEvent {
     Disconnected(Connection),
     Connected(Connection),
@@ -214,11 +185,6 @@ pub enum ConnectionEvent {
 #[derive(Default)]
 struct NetworkManager {
     is_bound: bool,
-}
-
-#[derive(Default)]
-struct LowLevelNetworkEventReader {
-    network_events: EventReader<LowLevelNetworkingEvent>,
 }
 
 fn control_networking(
@@ -248,81 +214,6 @@ fn control_networking(
             net.is_bound = false;
         } else {
             return;
-        }
-    }
-}
-
-fn deliver(
-    con_info: Res<NetworkConnectionInfo>,
-    net_res: Res<NetworkResource>,
-    mut send_events: ResMut<Events<SendEvent>>,
-) {
-    for ev in send_events.drain() {
-        let del_mode = if ev.0.payload.is_reliable {
-            NetworkDelivery::ReliableUnordered
-        } else {
-            NetworkDelivery::UnreliableUnordered
-        };
-        let payload_bin = bincode::serialize(&ev.0.payload).unwrap();
-        if let Some(server_addr) = con_info.server_addr {
-            // FIXME: Handle errors?
-            if let Err(err) = net_res.send(server_addr, &payload_bin, del_mode) {
-                eprintln!("Could not send delivery: {}", err);
-                continue;
-            }
-        } else if !net_res.connections().is_empty() {
-            match ev.0.addr {
-                DeliveryAddress::Broadcast => {
-                    // FIXME: Handle errors?
-                    if let Err(err) = net_res.broadcast(&payload_bin, del_mode) {
-                        eprintln!("Could not send delivery: {}", err);
-                        continue;
-                    }
-                }
-                DeliveryAddress::To(addr) => {
-                    // FIXME: Handle errors?
-                    if let Err(err) = net_res.send(addr, &payload_bin, del_mode) {
-                        eprintln!("Could not send delivery: {}", err);
-                        continue;
-                    }
-                }
-                _ => {
-                    unreachable!("A delivery address can't be set to `From` using the public API!");
-                }
-            }
-        }
-    }
-}
-
-fn poll_low_level_network_events(
-    lownet_events: Res<Events<LowLevelNetworkingEvent>>,
-    mut lownet_event_state: ResMut<LowLevelNetworkEventReader>,
-    mut network_events: ResMut<Events<NetworkEvent>>,
-) {
-    for ev in lownet_event_state.network_events.iter(&lownet_events) {
-        match ev {
-            LowLevelNetworkingEvent::Message(con, data) => {
-                network_events.send(NetworkEvent::Received(Delivery::from(
-                    match bincode::deserialize(&data) {
-                        Err(err) => {
-                            network_events.send(NetworkEvent::Error(err.into()));
-                            continue;
-                        }
-                        Ok(p) => p,
-                    },
-                    con.addr,
-                )))
-            }
-            LowLevelNetworkingEvent::Disconnected(con) => {
-                network_events.send(NetworkEvent::Connection(ConnectionEvent::Disconnected(
-                    *con,
-                )));
-            }
-            LowLevelNetworkingEvent::Connected(con) => {
-                network_events.send(NetworkEvent::Connection(ConnectionEvent::Connected(*con)));
-            }
-            // FIXME: Handle errors?
-            LowLevelNetworkingEvent::SendError(err) => eprintln!("{}", err),
         }
     }
 }
