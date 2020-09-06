@@ -197,7 +197,7 @@ impl From<AddrParseError> for NetworkError {
 #[derive(Debug)]
 pub enum NetworkEvent {
     Received(Delivery),
-    NetworkError(NetworkError),
+    Error(NetworkError),
     Connection(ConnectionEvent),
 }
 pub type NetworkEvents = Events<NetworkEvent>;
@@ -305,7 +305,7 @@ fn poll_low_level_network_events(
                 network_events.send(NetworkEvent::Received(Delivery::from(
                     match bincode::deserialize(&data) {
                         Err(err) => {
-                            network_events.send(NetworkEvent::NetworkError(err.into()));
+                            network_events.send(NetworkEvent::Error(err.into()));
                             continue;
                         }
                         Ok(p) => p,
