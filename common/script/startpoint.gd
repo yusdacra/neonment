@@ -8,7 +8,7 @@ func _ready() -> void:
 		state.is_server = true
 	state.config_path = "user://" + state.feature + "_config.json"
 	state.def_config_path = "res://" + state.feature + "/config.json"
-	OS.set_window_title("Neonment " + state.feature)
+	OS.set_meta()
 	state.read_def_conf()
 	state.read_conf()
 	get_tree().change_scene("res://" + state.feature + "/main.tscn")
